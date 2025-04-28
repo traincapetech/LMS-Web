@@ -1,0 +1,10 @@
+// src/App.jsx
+import React from "react";
+import AllRoutes from "./routes/AllRoutes";
+import "./App.css";
+
+const App = () => {
+  return <AllRoutes />;
+};
+
+export default App;
