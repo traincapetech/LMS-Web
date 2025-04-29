@@ -2,9 +2,13 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    // Use environment variable if available, otherwise use the direct connection string with CRM database
-    const mongoUri = process.env.MONGODB_URI || 
-      'mongodb+srv://traincape:parichay@traincapetechnology.1p6rbwq.mongodb.net/CRM?retryWrites=true&w=majority&appName=TraincapeTechnology';
+    // Use environment variable for MongoDB connection
+    const mongoUri = process.env.MONGO_URI;
+    
+    if (!mongoUri) {
+      console.error('MongoDB connection string is not defined in environment variables');
+      process.exit(1);
+    }
     
     const conn = await mongoose.connect(mongoUri, {
       useNewUrlParser: true,
@@ -13,7 +17,7 @@ const connectDB = async () => {
     
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error(`Error: ${error.message}`);
+    console.error(`MongoDB Connection Error: ${error.message}`);
     process.exit(1);
   }
 };

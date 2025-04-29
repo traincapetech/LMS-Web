@@ -50,7 +50,7 @@ UserSchema.pre('save', async function(next) {
 
 // Sign JWT and return
 UserSchema.methods.getSignedJwtToken = function() {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET || 'traincape_crm_secret_key', {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE || '30d'
   });
 };

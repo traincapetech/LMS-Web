@@ -26,8 +26,14 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-// Enable CORS
-app.use(cors());
+// Enable CORS with configuration
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204
+};
+app.use(cors(corsOptions));
 
 // Mount routers
 app.use('/api/auth', authRoutes);
@@ -36,7 +42,11 @@ app.use('/api/sales', saleRoutes);
 
 // Basic route for testing
 app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to CRM API' });
+  res.json({ 
+    message: 'Welcome to CRM API',
+    environment: process.env.NODE_ENV,
+    version: '1.0.0'
+  });
 });
 
 // Handle 404
@@ -49,13 +59,13 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || 5050;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+const server = app.listen(PORT, () => {
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {
   console.log(`Error: ${err.message}`);
   // Close server & exit process
-  // server.close(() => process.exit(1));
+  server.close(() => process.exit(1));
 }); 

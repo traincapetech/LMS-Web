@@ -5,8 +5,11 @@ const User = require('../models/User');
 exports.protect = async (req, res, next) => {
   let token;
   
-  console.log('Auth middleware triggered');
-  console.log('Headers:', req.headers);
+  // Only log in development environment
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Auth middleware triggered');
+    console.log('Headers:', req.headers);
+  }
 
   if (
     req.headers.authorization &&
@@ -14,12 +17,17 @@ exports.protect = async (req, res, next) => {
   ) {
     // Set token from Bearer token in header
     token = req.headers.authorization.split(' ')[1];
-    console.log('Token extracted:', token ? 'Found' : 'Not found');
+    
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Token extracted:', token ? 'Found' : 'Not found');
+    }
   }
 
   // Make sure token exists
   if (!token) {
-    console.log('No token found in request');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('No token found in request');
+    }
     return res.status(401).json({
       success: false,
       message: 'Not authorized to access this route'
@@ -28,17 +36,26 @@ exports.protect = async (req, res, next) => {
 
   try {
     // Verify token
-    const secretKey = process.env.JWT_SECRET || 'traincape_crm_secret_key';
-    console.log('Using secret key:', secretKey ? 'Secret available' : 'No secret');
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET environment variable is not defined');
+    }
     
-    const decoded = jwt.verify(token, secretKey);
-    console.log('Token decoded:', decoded);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Token decoded:', decoded);
+    }
 
     const user = await User.findById(decoded.id);
-    console.log('User found:', user ? 'Yes' : 'No');
+    
+    if (process.env.NODE_ENV === 'development') {
+      console.log('User found:', user ? 'Yes' : 'No');
+    }
     
     if (!user) {
-      console.log('No user found with the ID in the token');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('No user found with the ID in the token');
+      }
       return res.status(401).json({
         success: false,
         message: 'User not found'
