@@ -48,12 +48,18 @@ const LeadForm = ({ lead = null, onSuccess }) => {
 
   // If editing, populate form with lead data
   useEffect(() => {
+    console.log('========= FORM DATA INITIALIZATION =========');
     console.log('Current user:', user);
-    console.log('User ID from context:', user?._id);
+    console.log('User ID formats:', {
+      _id: user?._id,
+      id: user?.id
+    });
     console.log('Lead data:', lead);
     
     if (lead) {
-      setFormData({
+      // Editing an existing lead
+      console.log('Editing existing lead, populating form with lead data');
+      const formValues = {
         name: lead.name || '',
         email: lead.email || '',
         course: lead.course || '',
@@ -70,24 +76,41 @@ const LeadForm = ({ lead = null, onSuccess }) => {
         leadPerson: lead.leadPerson?._id || '',
         remarks: lead.remarks || '',
         feedback: lead.feedback || ''
-      });
-      console.log('Form data set from lead. assignedTo:', lead.assignedTo?._id);
+      };
+      
+      setFormData(formValues);
+      console.log('Populated form data:', formValues);
     } else {
-      // Default assignedTo to current user if creating a new lead
-      setFormData(prev => {
-        // Use the correct user ID property based on the API response structure
-        const userId = user?._id || user?.id || '';
-        console.log('Setting default assignedTo with user ID:', userId);
-        
-        const newFormData = {
-          ...prev,
-          assignedTo: userId,
-          leadPerson: user?.role === 'Lead Person' ? userId : ''
-        };
-        console.log('Default form data set:', newFormData);
-        return newFormData;
-      });
+      // Creating a new lead
+      console.log('Creating new lead, setting default values');
+      
+      // For consistent ID handling, use both _id and id fields from user object
+      const userId = (user?._id || user?.id || '').toString();
+      console.log('Using user ID for defaults:', userId);
+      
+      const formValues = {
+        name: '',
+        email: '',
+        course: '',
+        countryCode: '',
+        phone: '',
+        country: '',
+        pseudoId: '',
+        company: '',
+        client: '',
+        status: 'New',
+        source: '',
+        sourceLink: '',
+        assignedTo: userId,
+        leadPerson: user?.role === 'Lead Person' ? userId : '',
+        remarks: '',
+        feedback: ''
+      };
+      
+      setFormData(formValues);
+      console.log('Default form data:', formValues);
     }
+    console.log('==========================================');
   }, [lead, user]);
 
   // Handle form input changes
@@ -106,33 +129,49 @@ const LeadForm = ({ lead = null, onSuccess }) => {
     setLoading(true);
     setError(null);
     
-    // Debug form data being submitted
-    console.log('Form being submitted with data:', formData);
+    console.log('========= FORM SUBMISSION =========');
+    console.log('Form data being submitted:', formData);
     console.log('assignedTo value:', formData.assignedTo);
-    console.log('Current user:', user);
+    
+    // Validate that assignedTo is set
+    if (!formData.assignedTo) {
+      console.error('assignedTo is required but not set');
+      setError('Please select a sales person to assign this lead to');
+      setLoading(false);
+      return;
+    }
     
     try {
       let response;
       if (lead) {
         // Update existing lead
+        console.log('Updating existing lead:', lead._id);
         response = await leadsAPI.update(lead._id, formData);
       } else {
         // Create new lead
+        console.log('Creating new lead');
         response = await leadsAPI.create(formData);
       }
       
-      console.log('API response after create/update:', response.data);
+      console.log('API response:', response.data);
       
-      if (onSuccess) {
-        onSuccess(response.data.data);
+      if (response.data.success) {
+        console.log('Lead saved successfully with ID:', response.data.data._id);
+        
+        if (onSuccess) {
+          onSuccess(response.data.data);
+        } else {
+          navigate('/leads');
+        }
       } else {
-        navigate('/leads');
+        setError('Server returned an error: ' + (response.data.message || 'Unknown error'));
       }
     } catch (err) {
       console.error('Error submitting form:', err);
       setError(err.response?.data?.message || 'Failed to save lead. Please try again.');
     } finally {
       setLoading(false);
+      console.log('===================================');
     }
   };
 
@@ -331,29 +370,33 @@ const LeadForm = ({ lead = null, onSuccess }) => {
           </div>
 
           {/* Assigned To */}
-          <div className="col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Assigned To (Sales Person)* <span className="text-red-500 font-bold">Required</span>
+          <div className="col-span-2 bg-yellow-50 p-4 border border-yellow-300 rounded-md mb-4">
+            <label className="block text-lg font-bold text-gray-700 mb-2">
+              Assigned To (Sales Person)* <span className="text-red-500">Required</span>
             </label>
+            <p className="text-sm text-gray-600 mb-2">
+              The sales person who will handle this lead. They will see this lead in their dashboard.
+            </p>
             <select
               name="assignedTo"
-              value={formData.assignedTo}
+              value={formData.assignedTo || ''}
               onChange={handleChange}
               required
-              className="w-full p-2 bg-blue-50 border border-blue-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-3 bg-white border border-yellow-400 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 text-base"
             >
-              <option value="">Select a Sales Person</option>
-              {users.length === 0 && (
-                <option value="" disabled>No sales persons available</option>
+              <option value="">-- Select a Sales Person --</option>
+              {users.length === 0 ? (
+                <option value="" disabled>Loading sales persons...</option>
+              ) : (
+                users.map(u => (
+                  <option key={u._id} value={u._id}>
+                    {u.fullName} ({u.email})
+                  </option>
+                ))
               )}
-              {users.map(u => (
-                <option key={u._id} value={u._id}>
-                  {u.fullName} - {u.email} (ID: {u._id})
-                </option>
-              ))}
             </select>
-            <p className="text-xs text-gray-500 mt-1">
-              Assigning a lead to a sales person will make it visible to them. Current value: "{formData.assignedTo}"
+            <p className="text-xs text-gray-500 mt-2">
+              Current assigned value: "{formData.assignedTo || 'None'}"
             </p>
           </div>
         </div>

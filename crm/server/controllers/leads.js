@@ -5,71 +5,78 @@ const Lead = require('../models/Lead');
 // @access  Private
 exports.getLeads = async (req, res) => {
   try {
-    // Add query parameters for filtering if needed
-    const filter = {};
-    
-    console.log('User requesting leads:', {
+    console.log('============= GET LEADS REQUEST =============');
+    console.log('User making request:', {
       id: req.user._id,
+      idString: req.user._id.toString(),
       role: req.user.role,
       name: req.user.fullName,
       email: req.user.email
     });
     
-    const userId = req.user._id.toString();
-    console.log('User ID (string format):', userId);
+    // Instead of using complex filtering, let's use direct MongoDB queries
+    let leads = [];
     
-    // If not admin or manager, only show leads assigned to the user
-    // or created by the user if they are a Lead Person
-    if (req.user.role !== 'Admin' && req.user.role !== 'Manager') {
-      if (req.user.role === 'Lead Person') {
-        // Let MongoDB handle the ObjectId comparison
-        filter.$or = [
-          { leadPerson: req.user._id },
-          { assignedTo: req.user._id }
-        ];
-        console.log('Lead Person filter:', filter);
-      } else {
-        filter.assignedTo = req.user._id;
-        console.log('Sales Person filter:', filter);
-      }
-    } else {
-      console.log('Admin/Manager - no filter applied');
+    // Different queries based on role
+    if (req.user.role === 'Admin' || req.user.role === 'Manager') {
+      // Admin and Manager see all leads
+      console.log('Admin/Manager role - fetching ALL leads');
+      leads = await Lead.find({})
+        .populate('assignedTo', 'fullName email role')
+        .populate('leadPerson', 'fullName email role');
+    } 
+    else if (req.user.role === 'Lead Person') {
+      // Lead Person sees leads they created or leads assigned to them
+      console.log('Lead Person role - fetching created or assigned leads');
+      const userId = req.user._id;
+      
+      // Query with direct ID comparison
+      leads = await Lead.find({
+        $or: [
+          { leadPerson: userId },
+          { assignedTo: userId }
+        ]
+      })
+      .populate('assignedTo', 'fullName email role')
+      .populate('leadPerson', 'fullName email role');
+    }
+    else {
+      // Sales Person sees only leads assigned to them
+      console.log('Sales Person role - fetching assigned leads');
+      const userId = req.user._id;
+      
+      // Query for assignedTo exact match
+      leads = await Lead.find({ assignedTo: userId })
+        .populate('assignedTo', 'fullName email role')
+        .populate('leadPerson', 'fullName email role');
     }
     
-    const leads = await Lead.find(filter)
-      .populate('assignedTo', 'fullName email')
-      .populate('leadPerson', 'fullName email');
+    console.log(`Found ${leads.length} leads for this user`);
     
-    console.log(`Found ${leads.length} leads matching the filter`);
-    
-    // Debug: List lead IDs and assignedTo values
+    // Log lead details for debugging
     if (leads.length > 0) {
-      console.log('Lead details:', leads.map(lead => ({
-        id: lead._id,
-        name: lead.name,
-        assignedTo: lead.assignedTo ? lead.assignedTo._id : 'None',
-        assignedToName: lead.assignedTo ? lead.assignedTo.fullName : 'None'
-      })));
-    }
-    
-    // Get all leads to verify if any exist and check user ID matches
-    const allLeads = await Lead.find({}).populate('assignedTo');
-    console.log(`Total leads in database: ${allLeads.length}`);
-    
-    if (allLeads.length > 0) {
-      console.log('Checking if any leads should be visible to this user...');
+      console.log('Lead details:');
+      leads.forEach(lead => {
+        console.log(`- Lead ID: ${lead._id}, Name: ${lead.name}`);
+        console.log(`  Assigned to: ${lead.assignedTo ? lead.assignedTo.fullName + ' (ID: ' + lead.assignedTo._id + ')' : 'None'}`);
+      });
+    } else {
+      // If no leads were found, check ALL leads in the database to see why
+      console.log('No leads found for this user. Checking all leads:');
+      const allLeads = await Lead.find({}).populate('assignedTo', 'fullName email role');
+      
+      console.log(`Total leads in database: ${allLeads.length}`);
       allLeads.forEach(lead => {
-        if (lead.assignedTo) {
-          const leadAssignedId = lead.assignedTo._id ? lead.assignedTo._id.toString() : 'null';
-          console.log(`Lead "${lead.name}" (${lead._id})`);
-          console.log(`  - assignedTo: ${leadAssignedId}`);
-          console.log(`  - userId: ${userId}`);
-          console.log(`  - match: ${leadAssignedId === userId}`);
-        } else {
-          console.log(`Lead "${lead.name}" has no assignedTo value`);
-        }
+        const assignedUserId = lead.assignedTo ? lead.assignedTo._id.toString() : 'None';
+        const currentUserId = req.user._id.toString();
+        const isMatch = assignedUserId === currentUserId;
+        
+        console.log(`- Lead "${lead.name}" is assigned to: ${lead.assignedTo ? lead.assignedTo.fullName : 'None'} (ID: ${assignedUserId})`);
+        console.log(`  Current user ID: ${currentUserId}, Match: ${isMatch}`);
       });
     }
+    
+    console.log('==============================================');
     
     res.status(200).json({
       success: true,
@@ -148,40 +155,50 @@ exports.getLead = async (req, res) => {
 // @access  Private
 exports.createLead = async (req, res) => {
   try {
-    console.log('Creating new lead with data:', req.body);
+    console.log('============= CREATE LEAD REQUEST =============');
+    console.log('Lead data submitted:', req.body);
     console.log('User creating lead:', {
       id: req.user._id,
       role: req.user.role,
       name: req.user.fullName
     });
     
+    const leadData = { ...req.body };
+    
     // If the user is a Lead Person, set them as the leadPerson
     if (req.user.role === 'Lead Person') {
-      req.body.leadPerson = req.user._id.toString();
-      console.log('Setting leadPerson to current user:', req.user._id.toString());
+      leadData.leadPerson = req.user._id;
+      console.log('Setting leadPerson to current user', req.user._id);
     }
     
-    // If assignedTo is not specified or empty, assign to the current user
-    if (!req.body.assignedTo) {
-      req.body.assignedTo = req.user._id.toString();
-      console.log('No assignedTo provided, using current user:', req.user._id.toString());
+    // Critical: Make sure assignedTo is properly set
+    if (!leadData.assignedTo || leadData.assignedTo === '') {
+      console.log('No assignedTo provided, using current user', req.user._id);
+      leadData.assignedTo = req.user._id;
     } else {
-      console.log('Using provided assignedTo:', req.body.assignedTo);
-      // Ensure assignedTo is a string
-      req.body.assignedTo = req.body.assignedTo.toString();
+      console.log('Using provided assignedTo:', leadData.assignedTo);
+      // ObjectId is handled properly by Mongoose, no need to convert
     }
     
     // Make sure creation timestamp is set
-    req.body.createdAt = Date.now();
-    req.body.updatedAt = Date.now();
+    leadData.createdAt = Date.now();
+    leadData.updatedAt = Date.now();
     
-    const lead = await Lead.create(req.body);
-    console.log('Lead created successfully:', {
-      id: lead._id,
-      name: lead.name,
-      assignedTo: lead.assignedTo,
-      leadPerson: lead.leadPerson
+    console.log('Final lead data before creation:', leadData);
+    
+    const lead = await Lead.create(leadData);
+    
+    // Verify the created lead
+    const createdLead = await Lead.findById(lead._id).populate('assignedTo');
+    console.log('Created lead successfully:', {
+      id: createdLead._id,
+      name: createdLead.name,
+      assignedTo: createdLead.assignedTo ? {
+        id: createdLead.assignedTo._id,
+        name: createdLead.assignedTo.fullName
+      } : 'None'
     });
+    console.log('==============================================');
     
     res.status(201).json({
       success: true,
@@ -271,6 +288,101 @@ exports.deleteLead = async (req, res) => {
       data: {}
     });
   } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: err.message
+    });
+  }
+};
+
+// @desc    Get leads assigned to sales person
+// @route   GET /api/leads/assigned
+// @access  Private (Sales Person only)
+exports.getAssignedLeads = async (req, res) => {
+  try {
+    // Verify the user is a Sales Person
+    if (req.user.role !== 'Sales Person') {
+      return res.status(403).json({
+        success: false,
+        message: 'Only Sales Persons can access their assigned leads'
+      });
+    }
+
+    const leads = await Lead.find({ 
+      assignedTo: req.user._id 
+    }).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: leads.length,
+      data: leads
+    });
+  } catch (err) {
+    console.error('Error fetching assigned leads:', err);
+    res.status(500).json({
+      success: false,
+      message: 'Server Error'
+    });
+  }
+};
+
+// @desc    Update lead feedback
+// @route   PUT /api/leads/:id/feedback
+// @access  Private (Sales Person, Lead Person, Manager, Admin)
+exports.updateFeedback = async (req, res) => {
+  try {
+    const { feedback } = req.body;
+    
+    if (!feedback) {
+      return res.status(400).json({
+        success: false,
+        message: 'Feedback field is required'
+      });
+    }
+    
+    let lead = await Lead.findById(req.params.id);
+    
+    if (!lead) {
+      return res.status(404).json({
+        success: false,
+        message: `No lead found with id of ${req.params.id}`
+      });
+    }
+    
+    // Check if user is authorized to update feedback for this lead
+    if (
+      req.user.role !== 'Admin' && 
+      req.user.role !== 'Manager' && 
+      lead.assignedTo.toString() !== req.user._id.toString() &&
+      !(req.user.role === 'Lead Person' && 
+        lead.leadPerson && 
+        lead.leadPerson.toString() === req.user._id.toString())
+    ) {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to update feedback for this lead'
+      });
+    }
+    
+    // Update only the feedback field and updatedAt
+    lead = await Lead.findByIdAndUpdate(
+      req.params.id, 
+      { 
+        feedback, 
+        updatedAt: Date.now() 
+      }, 
+      {
+        new: true,
+        runValidators: true
+      }
+    );
+    
+    res.status(200).json({
+      success: true,
+      data: lead
+    });
+  } catch (err) {
+    console.error('Error updating feedback:', err);
     res.status(400).json({
       success: false,
       message: err.message

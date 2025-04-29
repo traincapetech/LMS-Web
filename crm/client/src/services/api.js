@@ -70,7 +70,9 @@ export const leadsAPI = {
   getById: (id) => api.get(`/leads/${id}`),
   create: (leadData) => api.post('/leads', leadData),
   update: (id, leadData) => api.put(`/leads/${id}`, leadData),
-  delete: (id) => api.delete(`/leads/${id}`)
+  delete: (id) => api.delete(`/leads/${id}`),
+  getAssigned: () => api.get('/leads/assigned'),
+  updateFeedback: (id, feedback) => api.put(`/leads/${id}/feedback`, { feedback })
 };
 
 // Sales API services
