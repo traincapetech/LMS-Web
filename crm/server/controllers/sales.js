@@ -200,4 +200,112 @@ exports.deleteSale = async (req, res) => {
       message: err.message
     });
   }
+};
+
+// @desc    Update token amount
+// @route   PUT /api/sales/:id/token
+// @access  Private
+exports.updateToken = async (req, res) => {
+  try {
+    let sale = await Sale.findById(req.params.id);
+    
+    if (!sale) {
+      return res.status(404).json({
+        success: false,
+        message: `No sale found with id of ${req.params.id}`
+      });
+    }
+    
+    // Check if user is authorized to update this sale
+    if (
+      req.user.role !== 'Admin' && 
+      req.user.role !== 'Manager' && 
+      sale.salesPerson.toString() !== req.user._id.toString()
+    ) {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to update this sale'
+      });
+    }
+    
+    // Validate token amount
+    const token = parseFloat(req.body.token);
+    if (isNaN(token) || token < 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Token amount must be a valid positive number'
+      });
+    }
+    
+    // Update token and pending amounts
+    sale.token = token;
+    sale.pending = sale.amount - token;
+    sale.updatedAt = Date.now();
+    
+    await sale.save();
+    
+    res.status(200).json({
+      success: true,
+      data: sale
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: err.message
+    });
+  }
+};
+
+// @desc    Update pending amount
+// @route   PUT /api/sales/:id/pending
+// @access  Private
+exports.updatePending = async (req, res) => {
+  try {
+    let sale = await Sale.findById(req.params.id);
+    
+    if (!sale) {
+      return res.status(404).json({
+        success: false,
+        message: `No sale found with id of ${req.params.id}`
+      });
+    }
+    
+    // Check if user is authorized to update this sale
+    if (
+      req.user.role !== 'Admin' && 
+      req.user.role !== 'Manager' && 
+      sale.salesPerson.toString() !== req.user._id.toString()
+    ) {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to update this sale'
+      });
+    }
+    
+    // Validate pending amount
+    const pending = parseFloat(req.body.pending);
+    if (isNaN(pending) || pending < 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Pending amount must be a valid positive number'
+      });
+    }
+    
+    // Update pending amount and token
+    sale.pending = pending;
+    sale.token = sale.amount - pending;
+    sale.updatedAt = Date.now();
+    
+    await sale.save();
+    
+    res.status(200).json({
+      success: true,
+      data: sale
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: err.message
+    });
+  }
 }; 

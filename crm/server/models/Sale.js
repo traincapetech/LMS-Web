@@ -10,6 +10,16 @@ const SaleSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Please add a sale amount']
   },
+  token: {
+    type: Number,
+    default: 0
+  },
+  pending: {
+    type: Number,
+    default: function() {
+      return this.amount - this.token;
+    }
+  },
   status: {
     type: String,
     enum: ['Pending', 'Closed', 'Cancelled'],
