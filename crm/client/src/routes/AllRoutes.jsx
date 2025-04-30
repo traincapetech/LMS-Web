@@ -9,6 +9,9 @@ import SalesPage from "../pages/SalesPage";
 import SalesTrackingPage from "../pages/SalesTrackingPage";
 import ProfilePage from "../pages/ProfilePage";
 import TokenDebugPage from "../pages/TokenDebugPage";
+import AdminDashboardPage from "../pages/AdminDashboardPage";
+import AdminUsersPage from "../pages/AdminUsersPage";
+import AdminLeadsPage from "../pages/AdminLeadsPage";
 import ProtectedRoute from "./ProtectedRoute";
 
 const AllRoutes = () => {
@@ -57,6 +60,34 @@ const AllRoutes = () => {
           element={
             <ProtectedRoute allowedRoles={["Sales Person", "Lead Person", "Manager", "Admin"]}>
               <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        
+        {/* Admin Routes */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRoles={["Admin"]}>
+              <AdminDashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute allowedRoles={["Admin"]}>
+              <AdminUsersPage />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/admin/leads"
+          element={
+            <ProtectedRoute allowedRoles={["Admin"]}>
+              <AdminLeadsPage />
             </ProtectedRoute>
           }
         />

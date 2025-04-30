@@ -1,7 +1,10 @@
 import axios from 'axios';
 
-// Create axios instance with base URL
-const API_URL = 'https://crm-backend-o36v.onrender.com/api';
+// Determine if we're in development mode (Vite exposes import.meta.env)
+const isDevelopment = import.meta.env.DEV;
+
+// Use relative URL in development (for proxy) and absolute URL in production
+const API_URL = isDevelopment ? '/api' : 'https://crm-backend-o36v.onrender.com/api';
 
 const api = axios.create({
   baseURL: API_URL,

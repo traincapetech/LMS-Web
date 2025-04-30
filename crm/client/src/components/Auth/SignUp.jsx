@@ -173,6 +173,7 @@ const SignUp = () => {
                   <option value="Manager">Manager</option>
                   <option value="Admin">Admin</option>
                 </select>
+                <p className="text-xs text-gray-500 mt-1">For initial setup, you can create an Admin account. This option will be removed in production.</p>
               </div>
             </div>
 

@@ -20,7 +20,7 @@ const LeadForm = ({ lead = null, onSuccess }) => {
     pseudoId: '',
     company: '',
     client: '',
-    status: 'New',
+    status: 'Introduction',
     source: '',
     sourceLink: '',
     assignedTo: '',
@@ -69,7 +69,7 @@ const LeadForm = ({ lead = null, onSuccess }) => {
         pseudoId: lead.pseudoId || '',
         company: lead.company || '',
         client: lead.client || '',
-        status: lead.status || 'New',
+        status: lead.status || 'Introduction',
         source: lead.source || '',
         sourceLink: lead.sourceLink || '',
         assignedTo: lead.assignedTo?._id || '',
@@ -98,7 +98,7 @@ const LeadForm = ({ lead = null, onSuccess }) => {
         pseudoId: '',
         company: '',
         client: '',
-        status: 'New',
+        status: 'Introduction',
         source: '',
         sourceLink: '',
         assignedTo: userId,
@@ -333,11 +333,12 @@ const LeadForm = ({ lead = null, onSuccess }) => {
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="New">New</option>
-              <option value="Contacted">Contacted</option>
-              <option value="Qualified">Qualified</option>
-              <option value="Lost">Lost</option>
-              <option value="Converted">Converted</option>
+              <option value="Introduction">Introduction</option>
+              <option value="Acknowledgement">Acknowledgement</option>
+              <option value="Question">Question</option>
+              <option value="Future Promise">Future Promise</option>
+              <option value="Payment">Payment</option>
+              <option value="Analysis">Analysis</option>
             </select>
           </div>
 

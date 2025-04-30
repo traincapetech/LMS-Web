@@ -9,7 +9,14 @@ export default defineConfig({
     port: 5173,
     host: true,
     // This is important for SPA routing
-    historyApiFallback: true
+    historyApiFallback: true,
+    proxy: {
+      '/api': {
+        target: 'https://crm-backend-o36v.onrender.com',
+        changeOrigin: true,
+        secure: false
+      }
+    }
   },
   resolve: {
     alias: {

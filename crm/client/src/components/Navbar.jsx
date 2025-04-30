@@ -2,6 +2,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import CurrencySelector from "./CurrencySelector";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -15,7 +16,7 @@ const Navbar = () => {
   return (
     <header className="bg-blue-600 text-white py-4 shadow-md">
       <nav className="container mx-auto flex justify-between items-center">
-      <a href="/"> <h1 className="text-xl font-bold">My CRM</h1></a>
+        <a href="/"> <h1 className="text-xl font-bold">My CRM</h1></a>
         <ul className="flex space-x-4">
           {/* Home link accessible to all */}
           <li>
@@ -43,12 +44,25 @@ const Navbar = () => {
             </li>
           )}
 
-          {/* Admin only link to Admin Dashboard */}
+          {/* Admin only links */}
           {user && user.role === "Admin" && (
-            <li>
-              <Link to="/admin" className="hover:text-blue-300">Admin Dashboard</Link>
-            </li>
+            <>
+              <li>
+                <Link to="/admin" className="hover:text-blue-300">Admin Dashboard</Link>
+              </li>
+              <li>
+                <Link to="/admin/users" className="hover:text-blue-300">Manage Users</Link>
+              </li>
+              <li>
+                <Link to="/admin/leads" className="hover:text-blue-300">Manage Leads</Link>
+              </li>
+            </>
           )}
+
+          {/* Currency Selector */}
+          <li className="ml-4">
+            <CurrencySelector />
+          </li>
 
           {/* Profile and Logout buttons for authenticated users */}
           {user ? (

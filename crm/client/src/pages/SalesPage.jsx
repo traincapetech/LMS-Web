@@ -307,11 +307,13 @@ const SalesPage = () => {
                         <td className="py-3 px-4">{lead.course}</td>
                         <td className="py-3 px-4">
                           <span className={`px-2 py-1 rounded-full text-xs ${
-                            lead.status === 'New' ? 'bg-blue-100 text-blue-800' :
-                            lead.status === 'Contacted' ? 'bg-yellow-100 text-yellow-800' :
-                            lead.status === 'Qualified' ? 'bg-purple-100 text-purple-800' :
-                            lead.status === 'Converted' ? 'bg-green-100 text-green-800' :
-                            'bg-red-100 text-red-800'
+                            lead.status === 'Introduction' ? 'bg-blue-100 text-blue-800' :
+                            lead.status === 'Acknowledgement' ? 'bg-yellow-100 text-yellow-800' :
+                            lead.status === 'Question' ? 'bg-purple-100 text-purple-800' :
+                            lead.status === 'Future Promise' ? 'bg-red-100 text-red-800' :
+                            lead.status === 'Payment' ? 'bg-green-100 text-green-800' :
+                            lead.status === 'Analysis' ? 'bg-gray-100 text-gray-800' :
+                            'bg-gray-100 text-gray-800'
                           }`}>
                             {lead.status}
                           </span>

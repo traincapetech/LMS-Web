@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { salesAPI, leadsAPI, authAPI } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import Layout from "../components/Layout/Layout";
+import { formatCurrency } from "../utils/helpers";
 
 const SalesTrackingPage = () => {
   const { user } = useAuth();
@@ -97,12 +98,28 @@ const SalesTrackingPage = () => {
       const response = await salesAPI.getAll();
       
       if (response.data.success) {
+        // Debug log the response data
+        console.log("Sales API response:", response.data);
+        
         // Initialize sales with additional fields we want to track
         const processedSales = await Promise.all(
           response.data.data.map(async (sale) => {
             // If sale doesn't have token or pending, initialize them
             if (!sale.token) sale.token = 0;
             if (!sale.pending) sale.pending = sale.amount - (sale.token || 0);
+            
+            // Debug log individual sale
+            console.log("Processing sale:", {
+              id: sale._id,
+              leadId: sale.leadId,
+              salesPerson: sale.salesPerson,
+              leadName: sale.leadId?.name,
+              phone: sale.leadId?.phone,
+              countryCode: sale.leadId?.countryCode,
+              country: sale.leadId?.country,
+              leadBy: sale.leadId?.leadPerson?.fullName || sale.leadId?.createdBy?.fullName,
+              saleBy: sale.salesPerson?.fullName
+            });
             
             return sale;
           })
@@ -207,9 +224,13 @@ const SalesTrackingPage = () => {
         status: 'Pending' // Default status for new sale
       };
       
+      console.log("Submitting new sale with data:", saleData);
+      
       const response = await salesAPI.create(saleData);
       
       if (response.data.success) {
+        console.log("Sale created successfully:", response.data.data);
+        
         // Add new sale to the list
         setSales(prev => [response.data.data, ...prev]);
         
@@ -292,14 +313,6 @@ const SalesTrackingPage = () => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString();
-  };
-
-  // Format currency for display
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR'
-    }).format(amount);
   };
 
   // Handle month change
@@ -461,7 +474,11 @@ const SalesTrackingPage = () => {
                           <td className="py-3 px-4">{formatDate(sale.createdAt)}</td>
                           <td className="py-3 px-4">{sale.leadId?.name || 'N/A'}</td>
                           <td className="py-3 px-4">{sale.product}</td>
-                          <td className="py-3 px-4">{sale.leadId?.phone || 'N/A'}</td>
+                          <td className="py-3 px-4">
+                            {(sale.leadId?.phone && sale.leadId?.countryCode) ? 
+                              `${sale.leadId.countryCode} ${sale.leadId.phone}` : 
+                              'N/A'}
+                          </td>
                           <td className="py-3 px-4">{sale.leadId?.country || 'N/A'}</td>
                           
                           {/* Total Amount - Editable */}
@@ -506,7 +523,7 @@ const SalesTrackingPage = () => {
                             )}
                           </td>
                           
-                          <td className="py-3 px-4">{sale.leadId?.createdBy?.fullName || 'N/A'}</td>
+                          <td className="py-3 px-4">{sale.leadId?.leadPerson?.fullName || sale.leadId?.createdBy?.fullName || 'N/A'}</td>
                           <td className="py-3 px-4">{sale.salesPerson?.fullName || 'N/A'}</td>
                           
                           {/* Actions */}
