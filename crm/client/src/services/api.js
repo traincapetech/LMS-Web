@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Create axios instance with base URL
-const API_URL = 'http://localhost:8080/api';
+const API_URL = 'https://crm-backend-o36v.onrender.com/api';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -81,7 +81,9 @@ export const salesAPI = {
   getById: (id) => api.get(`/sales/${id}`),
   create: (saleData) => api.post('/sales', saleData),
   update: (id, saleData) => api.put(`/sales/${id}`, saleData),
-  delete: (id) => api.delete(`/sales/${id}`)
+  delete: (id) => api.delete(`/sales/${id}`),
+  updateToken: (id, token) => api.put(`/sales/${id}/token`, { token }),
+  updatePending: (id, pending) => api.put(`/sales/${id}/pending`, { pending })
 };
 
 export default api;

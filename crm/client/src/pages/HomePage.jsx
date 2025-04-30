@@ -2,8 +2,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout/Layout";
+import { useAuth } from "../context/AuthContext";
 
 const HomePage = () => {
+  const { user } = useAuth();
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -12,14 +15,32 @@ const HomePage = () => {
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Streamline Your Customer Relationships</h1>
             <p className="text-xl mb-8">A powerful CRM solution designed to boost sales, improve customer service, and grow your business.</p>
-            <div className="flex flex-wrap gap-4">
-              <Link to="/signup" className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg shadow hover:bg-gray-100 transition">
-                Get Started
-              </Link>
-              <Link to="/login" className="px-6 py-3 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-blue-600 transition">
-                Log In
-              </Link>
-            </div>
+            {!user ? (
+              <div className="flex flex-wrap gap-4">
+                <Link to="/signup" className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg shadow hover:bg-gray-100 transition">
+                  Get Started
+                </Link>
+                <Link to="/login" className="px-6 py-3 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-blue-600 transition">
+                  Log In
+                </Link>
+              </div>
+            ) : (
+              <div className="flex flex-wrap gap-4">
+                {user.role === "Sales Person" && (
+                  <Link to="/sales" className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg shadow hover:bg-gray-100 transition">
+                    My Leads
+                  </Link>
+                )}
+                {(user.role === "Lead Person" || user.role === "Manager" || user.role === "Admin") && (
+                  <Link to="/leads" className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg shadow hover:bg-gray-100 transition">
+                    Manage Leads
+                  </Link>
+                )}
+                <Link to="/profile" className="px-6 py-3 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-blue-600 transition">
+                  My Profile
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -66,9 +87,15 @@ const HomePage = () => {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl font-bold mb-4">Ready to transform your business?</h2>
           <p className="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">Join thousands of businesses already using our CRM platform to grow their customer relationships.</p>
-          <Link to="/signup" className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition">
-            Start Your Free Trial
-          </Link>
+          {!user ? (
+            <Link to="/signup" className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition">
+              Start Your Free Trial
+            </Link>
+          ) : (
+            <p className="text-lg font-medium text-blue-600">
+              Welcome back, {user.fullName}! Thank you for being part of our CRM family.
+            </p>
+          )}
         </div>
       </section>
     </Layout>

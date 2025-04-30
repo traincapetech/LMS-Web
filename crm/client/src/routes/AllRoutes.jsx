@@ -1,11 +1,13 @@
 // src/routes/AllRoutes.jsx
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "../pages/HomePage";
 import Login from "../components/Auth/Login";
 import SignUp from "../components/Auth/SignUp";
 import LeadsPage from "../pages/LeadsPage";
 import SalesPage from "../pages/SalesPage";
+import SalesTrackingPage from "../pages/SalesTrackingPage";
+import ProfilePage from "../pages/ProfilePage";
 import TokenDebugPage from "../pages/TokenDebugPage";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -35,6 +37,26 @@ const AllRoutes = () => {
           element={
             <ProtectedRoute allowedRoles={["Sales Person", "Manager", "Admin"]}>
               <SalesPage />
+            </ProtectedRoute>
+          }
+        />
+        
+        {/* Sales Tracking Route */}
+        <Route
+          path="/sales-tracking"
+          element={
+            <ProtectedRoute allowedRoles={["Sales Person", "Manager", "Admin"]}>
+              <SalesTrackingPage />
+            </ProtectedRoute>
+          }
+        />
+        
+        {/* Profile Route - accessible to all authenticated users */}
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute allowedRoles={["Sales Person", "Lead Person", "Manager", "Admin"]}>
+              <ProfilePage />
             </ProtectedRoute>
           }
         />

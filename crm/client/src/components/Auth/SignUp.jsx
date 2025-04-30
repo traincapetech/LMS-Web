@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Layout from "../Layout/Layout";
 import { useAuth } from "../../context/AuthContext";
 
@@ -75,9 +75,9 @@ const SignUp = () => {
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
               Or{" "}
-              <a href="/login" className="font-medium text-blue-600 hover:text-blue-500">
+              <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
                 sign in to your existing account
-              </a>
+              </Link>
             </p>
           </div>
           
