@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@iofate/react-coinbase-commerce": "^1.0.0",
+    "axios": "^1.8.4",
+    "coinbase-commerce-node": "^1.0.4",
+    "coingecko-api": "^1.0.10",
+    "react-draggable": "^4.4.6"
+  }
+}
