@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getCourseById } from "./CourseData";
 import { CartContext } from "../App";
 import axios from "axios";
@@ -10,77 +10,24 @@ const CourseDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { addToCart } = useContext(CartContext);
+  const navigate = useNavigate();
 
   const handleAddToCart = async () => {
-    try {
-      console.log('Adding course to cart from details page:', course.title);
-      console.log('Token in localStorage:', localStorage.getItem('token'));
-
-      // Check if this is an API course (has _id) or static course
-      const isApiCourse = course.id && course.id.length > 20; // MongoDB ObjectId length
-      console.log('Is API course:', isApiCourse, 'Course ID:', course.id);
-
-      if (isApiCourse) {
-        // For API courses, require login and add to backend cart
-        const token = localStorage.getItem('token');
-        console.log('Token found for API course:', !!token);
-        
-        if (!token) {
-          alert('Please login to add API courses to cart');
-          return;
-        }
-
-        console.log('Adding API course to backend cart:', course.id);
-        
-        const response = await axios.post('http://localhost:5001/api/cart/add', {
-          courseId: course.id
-        }, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        if (response.status === 200) {
-          // Also add to local cart context for immediate UI update
-          addToCart({
-            id: course.id,
-            title: course.title,
-            description: course.subtitle,
-            price: course.price,
-            thumbnailUrl: course.thumbnailUrl
-          });
-          console.log('API course added successfully to backend and local cart');
-          alert('Course added to cart successfully!');
-        }
-      } else {
-        // For static courses, add to local cart only (no login required)
-        console.log('Adding static course to local cart:', course.id);
-        
-        addToCart({
-          id: course.id,
-          title: course.title,
-          description: course.subtitle,
-          price: course.price,
-          thumbnailUrl: course.thumbnailUrl
-        });
-        console.log('Static course added successfully to local cart');
-        alert('Course added to cart successfully!');
-      }
-    } catch (error) {
-      console.error('Error adding course to cart:', error);
-      
-      if (error.response?.status === 401) {
-        alert('Your session has expired. Please login again.');
-        localStorage.removeItem('token');
-      } else if (error.response?.status === 400 && error.response?.data?.message === 'Course already in cart') {
-        alert('Course is already in your cart!');
-      } else if (error.response?.status === 404) {
-        alert('Course not found. Please try again.');
-      } else {
-        console.error('Full error details:', error);
-        alert('Failed to add course to cart. Please try again.');
-      }
-    }
+    // Store course information in localStorage to pass to cart page
+    const courseToAdd = {
+      id: course.id,
+      title: course.title,
+      description: course.subtitle,
+      price: course.price,
+      thumbnailUrl: course.thumbnailUrl,
+      isApiCourse: course.id && course.id.length > 20 // MongoDB ObjectId length
+    };
+    
+    // Store the course info temporarily for the cart page
+    localStorage.setItem('courseToAdd', JSON.stringify(courseToAdd));
+    
+    // Redirect to cart page
+    navigate('/cart');
   };
 
   const handleBuyNow = () => {
@@ -106,7 +53,7 @@ const CourseDetails = () => {
         
         // First try to get from API
         try {
-          const response = await axios.get(`http://localhost:5001/api/courses/${id}`);
+          const response = await axios.get(`https://lms-backend-5s5x.onrender.com/api/courses/${id}`);
           const apiCourse = response.data;
           
           // Transform API data to match the expected format

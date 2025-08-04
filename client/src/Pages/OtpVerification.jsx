@@ -21,7 +21,7 @@ const OtpVerification = () => {
     setLoading(true);
     setMessage("");
     try {
-      const res = await axios.post("http://localhost:5001/api/auth/verify-otp", form);
+              const res = await axios.post("https://lms-backend-5s5x.onrender.com/api/auth/verify-otp", form);
       setMessage(res.data.message || "OTP verified. Redirecting...");
       setTimeout(() => {
         window.location.href = `/set-new-password?email=${encodeURIComponent(form.email)}`;

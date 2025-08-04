@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
 import { FaHtml5, FaQuestionCircle } from 'react-icons/fa';
 import { CartContext } from '../App';
+import { useNavigate } from 'react-router-dom';
 
 const Html = () => {
   const { addToCart } = useContext(CartContext);
+  const navigate = useNavigate();
   const courseDetails = {
     title: 'IBM Web Development using HTML',
     price: 3000,
@@ -23,7 +25,10 @@ const Html = () => {
       <div className="bg-[#f1f5f9] rounded-[10px] py-[1.2rem] px-[1.5rem] mb-6 flex items-center justify-between">
         <h3 className="text-[1.1rem] font-semibold text-[#00599C] m-0">IBM Web Development Using HTML Certification Course</h3>
         <div className="text-[1.3rem] font-bold text-[#00599C] mr-6"> INR 3,000</div>
-        <button onClick={() => addToCart(courseDetails)} className="bg-gradient-to-r from-[#00599C] to-[#0ea5e9] text-white border-none rounded-lg py-[10px] px-[28px] font-bold text-base cursor-pointer shadow-[0_2px_8px_#c7d2fe] transition-colors duration-200">Add To Cart</button>
+        <button onClick={() => {
+          localStorage.setItem('courseToAdd', JSON.stringify(courseDetails));
+          navigate('/cart');
+        }} className="bg-gradient-to-r from-[#00599C] to-[#0ea5e9] text-white border-none rounded-lg py-[10px] px-[28px] font-bold text-base cursor-pointer shadow-[0_2px_8px_#c7d2fe] transition-colors duration-200">Add To Cart</button>
       </div>
 
       {/* Description Section */}

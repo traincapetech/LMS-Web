@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { getAllCourses, searchCourses } from "./CourseData";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { CartContext } from "../App";
 import axios from "axios";
 
@@ -12,105 +12,27 @@ const Courses = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { addToCart } = useContext(CartContext);
+  const navigate = useNavigate();
 
   const handleAddToCart = async (course, e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    try {
-      console.log('=== DEBUGGING CART ADD ===');
-      console.log('Course title:', course.title);
-      console.log('Course ID:', course.id);
-      console.log('isApiCourse flag:', course.isApiCourse);
-      
-      // Check token status
-      const token = localStorage.getItem('token');
-      console.log('Raw localStorage token:', token);
-      console.log('Token exists:', !!token);
-      console.log('Token length:', token ? token.length : 0);
-      console.log('All localStorage keys:', Object.keys(localStorage));
-
-      // For API courses, require login and add to backend cart
-      if (course.isApiCourse) {
-        console.log('Token found for API course:', !!token);
-        console.log('Token length:', token ? token.length : 0);
-        
-        if (!token) {
-          console.log('NO TOKEN FOUND - showing login alert');
-          alert('Please login to add API courses to cart');
-          return;
-        }
-
-        console.log('Adding API course to backend cart:', course.id);
-        
-        try {
-          const response = await axios.post('http://localhost:5001/api/cart/add', {
-            courseId: course.id
-          }, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-
-          if (response.status === 200) {
-            // Also add to local cart context for immediate UI update
-            addToCart({
-              id: course.id,
-              title: course.title,
-              description: course.subtitle,
-              price: course.price,
-              thumbnailUrl: course.thumbnailUrl
-            });
-            console.log('API course added successfully to backend and local cart');
-            alert('Course added to cart successfully!');
-          }
-        } catch (apiError) {
-          console.error('API cart error:', apiError);
-          if (apiError.response?.status === 401) {
-            alert('Your session has expired. Please login again.');
-            localStorage.removeItem('token');
-          } else {
-            // Fallback to local cart if API fails
-            console.log('API failed, adding to local cart as fallback');
-            addToCart({
-              id: course.id,
-              title: course.title,
-              description: course.subtitle,
-              price: course.price,
-              thumbnailUrl: course.thumbnailUrl
-            });
-            alert('Course added to local cart (API unavailable)');
-          }
-        }
-      } else {
-        // For static courses, add to local cart only (no login required)
-        console.log('Adding static course to local cart:', course.id);
-        
-        addToCart({
-          id: course.id,
-          title: course.title,
-          description: course.subtitle,
-          price: course.price,
-          thumbnailUrl: course.thumbnailUrl
-        });
-        console.log('Static course added successfully to local cart');
-        alert('Course added to cart successfully!');
-      }
-    } catch (error) {
-      console.error('Error adding course to cart:', error);
-      
-      if (error.response?.status === 401) {
-        alert('Your session has expired. Please login again.');
-        localStorage.removeItem('token');
-      } else if (error.response?.status === 400 && error.response?.data?.message === 'Course already in cart') {
-        alert('Course is already in your cart!');
-      } else if (error.response?.status === 404) {
-        alert('Course not found. Please try again.');
-      } else {
-        console.error('Full error details:', error);
-        alert('Failed to add course to cart. Please try again.');
-      }
-    }
+    // Store course information in localStorage to pass to cart page
+    const courseToAdd = {
+      id: course.id,
+      title: course.title,
+      description: course.subtitle,
+      price: course.price,
+      thumbnailUrl: course.thumbnailUrl,
+      isApiCourse: course.isApiCourse
+    };
+    
+    // Store the course info temporarily for the cart page
+    localStorage.setItem('courseToAdd', JSON.stringify(courseToAdd));
+    
+    // Redirect to cart page
+    navigate('/cart');
   };
 
   useEffect(() => {
@@ -134,7 +56,7 @@ const Courses = () => {
           
           // Try to get API courses and add them
           try {
-            const response = await axios.get("http://localhost:5001/api/courses");
+            const response = await axios.get("https://lms-backend-5s5x.onrender.com/api/courses");
             const apiCourses = response.data.map(course => ({
               id: course._id,
               title: course.title,

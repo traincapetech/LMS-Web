@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { authAPI } from "../utils/api";
 import { Link } from "react-router-dom";
 
 const Login = () => {
@@ -20,7 +20,7 @@ const Login = () => {
       console.log('Attempting login with:', form.email);
       console.log('Form data:', form);
       
-      const res = await axios.post("http://localhost:5001/api/auth/login", form);
+      const res = await authAPI.login(form);
       console.log('Full login response:', res);
       console.log('Response data:', res.data);
       console.log('Token in response:', res.data.token);

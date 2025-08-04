@@ -443,7 +443,7 @@ const Dashboard = () => {
                     formData.append("thumbnail", file);
                     try {
                       console.log("Uploading image to server...");
-                      const res = await axios.post("http://localhost:5001/api/upload/thumbnail", formData, {
+                      const res = await axios.post("https://lms-backend-5s5x.onrender.com/api/upload/thumbnail", formData, {
                         headers: { "Content-Type": "multipart/form-data" },
                       });
                       console.log("Upload response:", res.data);
@@ -643,7 +643,7 @@ const Dashboard = () => {
     };
     try {
       const token = localStorage.getItem('token');
-              const res = await fetch('http://localhost:5001/api/pending-courses/apply', {
+              const res = await fetch('https://lms-backend-5s5x.onrender.com/api/pending-courses/apply', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

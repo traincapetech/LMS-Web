@@ -8,7 +8,7 @@ const Profile = () => {
       const token = localStorage.getItem("token");
       if (!token) return;
       try {
-        const res = await fetch("http://localhost:5001/api/profile", {
+        const res = await fetch("https://lms-backend-5s5x.onrender.com/api/profile", {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();

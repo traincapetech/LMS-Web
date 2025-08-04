@@ -42,14 +42,14 @@ const AdminDashboard = () => {
       setError("");
       try {
         // Instructor requests
-        const res1 = await fetch("http://localhost:5001/api/instructor-requests/", {
+        const res1 = await fetch("https://lms-backend-5s5x.onrender.com/api/instructor-requests/", {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data1 = await res1.json();
         if (!res1.ok) throw new Error(data1.message || "Failed to fetch instructor requests");
         setRequests(data1);
         // Pending courses
-                  const res2 = await fetch("http://localhost:5001/api/pending-courses/", {
+                  const res2 = await fetch("https://lms-backend-5s5x.onrender.com/api/pending-courses/", {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data2 = await res2.json();
@@ -67,7 +67,7 @@ const AdminDashboard = () => {
   // Approve or reject instructor request
   const handleAction = async (id, action) => {
     try {
-              const res = await fetch(`http://localhost:5001/api/instructor-requests/${id}/${action}`, {
+              const res = await fetch(`https://lms-backend-5s5x.onrender.com/api/instructor-requests/${id}/${action}`, {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -83,7 +83,7 @@ const AdminDashboard = () => {
   // Approve or reject pending course
   const handleCourseAction = async (id, action) => {
     try {
-              const res = await fetch(`http://localhost:5001/api/pending-courses/${id}/${action}`, {
+              const res = await fetch(`https://lms-backend-5s5x.onrender.com/api/pending-courses/${id}/${action}`, {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}` },
       });

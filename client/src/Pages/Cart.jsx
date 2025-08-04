@@ -29,6 +29,20 @@ const Cart = () => {
     // Load local cart from localStorage
     const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
     setCart(localCart);
+    
+    // Check if there's a course to add from the courses page
+    const courseToAdd = localStorage.getItem('courseToAdd');
+    if (courseToAdd) {
+      try {
+        const courseData = JSON.parse(courseToAdd);
+        handleAddCourseToCart(courseData);
+        // Clear the course data after processing
+        localStorage.removeItem('courseToAdd');
+      } catch (error) {
+        console.error('Error processing course to add:', error);
+        localStorage.removeItem('courseToAdd');
+      }
+    }
   }, []);
 
   // Add a function to refresh local cart
@@ -59,7 +73,7 @@ const Cart = () => {
 
       console.log('Fetching backend cart with token:', token.substring(0, 20) + '...');
       
-              const response = await axios.get('http://localhost:5001/api/cart', {
+              const response = await axios.get('https://lms-backend-5s5x.onrender.com/api/cart', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -87,7 +101,7 @@ const Cart = () => {
         return;
       }
 
-              const response = await axios.get('http://localhost:5001/api/coupons/available', {
+              const response = await axios.get('https://lms-backend-5s5x.onrender.com/api/coupons/available', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -95,6 +109,69 @@ const Cart = () => {
       setAvailableCoupons(response.data);
     } catch (error) {
       console.error('Failed to fetch available coupons:', error);
+    }
+  };
+
+  const handleAddCourseToCart = async (courseData) => {
+    try {
+      console.log('Adding course to cart from cart page:', courseData);
+      
+      // Check token status
+      const token = localStorage.getItem('token');
+      
+      // For API courses, require login and add to backend cart
+      if (courseData.isApiCourse) {
+        if (!token) {
+          alert('Please login to add API courses to cart');
+          return;
+        }
+
+        try {
+          const response = await axios.post('https://lms-backend-5s5x.onrender.com/api/cart/add', {
+            courseId: courseData.id
+          }, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
+          if (response.status === 200) {
+            // Also add to local cart context for immediate UI update
+            const updatedCart = [...cart, courseData];
+            setCart(updatedCart);
+            localStorage.setItem('cart', JSON.stringify(updatedCart));
+            console.log('API course added successfully to backend and local cart');
+            alert('Course added to cart successfully!');
+          }
+        } catch (apiError) {
+          console.error('API cart error:', apiError);
+          if (apiError.response?.status === 401) {
+            alert('Your session has expired. Please login again.');
+            localStorage.removeItem('token');
+          } else if (apiError.response?.status === 400 && apiError.response?.data?.message === 'Course already in cart') {
+            alert('Course is already in your cart!');
+          } else {
+            // Fallback to local cart if API fails
+            console.log('API failed, adding to local cart as fallback');
+            const updatedCart = [...cart, courseData];
+            setCart(updatedCart);
+            localStorage.setItem('cart', JSON.stringify(updatedCart));
+            alert('Course added to local cart (API unavailable)');
+          }
+        }
+      } else {
+        // For static courses, add to local cart only (no login required)
+        console.log('Adding static course to local cart:', courseData.id);
+        
+        const updatedCart = [...cart, courseData];
+        setCart(updatedCart);
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
+        console.log('Static course added successfully to local cart');
+        alert('Course added to cart successfully!');
+      }
+    } catch (error) {
+      console.error('Error adding course to cart:', error);
+      alert('Failed to add course to cart. Please try again.');
     }
   };
 
@@ -106,7 +183,7 @@ const Cart = () => {
       if (token && backendCart && backendCart.items.some(item => item.course._id === courseId)) {
         console.log('Removing course from backend cart:', courseId);
         
-        await axios.delete(`http://localhost:5001/api/cart/remove/${courseId}`, {
+        await axios.delete(`https://lms-backend-5s5x.onrender.com/api/cart/remove/${courseId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -148,7 +225,7 @@ const Cart = () => {
 
       console.log('Applying coupon:', couponCode.trim());
       
-              const response = await axios.post('http://localhost:5001/api/cart/apply-coupon', {
+              const response = await axios.post('https://lms-backend-5s5x.onrender.com/api/cart/apply-coupon', {
         couponCode: couponCode.trim()
       }, {
         headers: {
@@ -173,7 +250,7 @@ const Cart = () => {
       const token = localStorage.getItem('token');
       if (!token) return;
 
-              await axios.delete('http://localhost:5001/api/cart/remove-coupon', {
+              await axios.delete('https://lms-backend-5s5x.onrender.com/api/cart/remove-coupon', {
         headers: {
           'Authorization': `Bearer ${token}`
         }

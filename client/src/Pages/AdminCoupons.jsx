@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { couponsAPI } from '../utils/api';
+import ApiDebugger from '../components/ApiDebugger';
 
 const AdminCoupons = () => {
   const [coupons, setCoupons] = useState([]);
@@ -21,14 +22,10 @@ const AdminCoupons = () => {
 
   const fetchCoupons = async () => {
     try {
-      const token = localStorage.getItem('token');
-              const response = await axios.get('http://localhost:5001/api/coupons', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const response = await couponsAPI.getCoupons();
       setCoupons(response.data);
     } catch (error) {
+      console.error('Failed to fetch coupons:', error);
       setError('Failed to fetch coupons');
     } finally {
       setLoading(false);
@@ -38,12 +35,7 @@ const AdminCoupons = () => {
   const createCoupon = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
-              const response = await axios.post('http://localhost:5001/api/coupons', newCoupon, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const response = await couponsAPI.createCoupon(newCoupon);
       setCoupons([response.data, ...coupons]);
       setShowCreateForm(false);
       setNewCoupon({
@@ -56,21 +48,18 @@ const AdminCoupons = () => {
       });
       alert('Coupon created successfully!');
     } catch (error) {
+      console.error('Failed to create coupon:', error);
       alert(error.response?.data?.message || 'Failed to create coupon');
     }
   };
 
   const generateDefaultCoupons = async () => {
     try {
-      const token = localStorage.getItem('token');
-              const response = await axios.post('http://localhost:5001/api/coupons/generate-default', {}, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const response = await couponsAPI.generateDefault();
       await fetchCoupons();
       alert(`Generated ${response.data.totalCreated} default coupons!`);
     } catch (error) {
+      console.error('Failed to generate default coupons:', error);
       alert('Failed to generate default coupons');
     }
   };
@@ -79,15 +68,11 @@ const AdminCoupons = () => {
     if (!window.confirm('Are you sure you want to delete this coupon?')) return;
     
     try {
-      const token = localStorage.getItem('token');
-              await axios.delete(`http://localhost:5001/api/coupons/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      await couponsAPI.deleteCoupon(id);
       setCoupons(coupons.filter(coupon => coupon._id !== id));
       alert('Coupon deleted successfully!');
     } catch (error) {
+      console.error('Failed to delete coupon:', error);
       alert('Failed to delete coupon');
     }
   };
@@ -112,6 +97,9 @@ const AdminCoupons = () => {
       backgroundColor: '#f8fafc',
       minHeight: '100vh'
     }}>
+      {/* Debug Component */}
+      <ApiDebugger />
+      
       {/* Header */}
       <div style={{ 
         textAlign: 'center', 

@@ -15,12 +15,12 @@ const AdminInstructors = () => {
       setError("");
       try {
         // Fetch all instructors
-        const res1 = await fetch("http://localhost:5001/api/profile/instructors");
+        const res1 = await fetch("https://lms-backend-5s5x.onrender.com/api/profile/instructors");
         const data1 = await res1.json();
         if (!res1.ok) throw new Error(data1.message || "Failed to fetch instructors");
         setInstructors(data1);
         // Fetch all published courses
-                  const res2 = await fetch("http://localhost:5001/api/courses");
+                  const res2 = await fetch("https://lms-backend-5s5x.onrender.com/api/courses");
         const data2 = await res2.json();
         if (!res2.ok) throw new Error(data2.message || "Failed to fetch courses");
         setCourses(data2.filter(c => c.published));
@@ -41,7 +41,7 @@ const AdminInstructors = () => {
         return;
       }
 
-                  const response = await axios.post('http://localhost:5001/api/cart/add', {
+                  const response = await axios.post('https://lms-backend-5s5x.onrender.com/api/cart/add', {
         courseId: course._id
       }, {
         headers: {

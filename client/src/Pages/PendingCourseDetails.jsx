@@ -14,7 +14,7 @@ const PendingCourseDetails = () => {
       setLoading(true);
       setError("");
       try {
-        const res = await fetch(`http://localhost:5001/api/pending-courses/${id}`, {
+        const res = await fetch(`https://lms-backend-5s5x.onrender.com/api/pending-courses/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();

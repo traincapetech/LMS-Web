@@ -21,7 +21,7 @@ const Form = () => {
     setLoading(true);
     try {
       // Call backend to generate/send OTP
-      const res = await fetch("http://localhost:5001/api/otp/send", {
+              const res = await fetch("https://lms-backend-5s5x.onrender.com/api/otp/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fullName: name, email }),

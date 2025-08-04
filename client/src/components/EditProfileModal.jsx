@@ -68,7 +68,7 @@ const EditProfileModal = ({ user, onSave, onCancel }) => {
         photoUrl: photo,
       };
       const res = await axios.put(
-        "http://localhost:5001/api/profile",
+        "https://lms-backend-5s5x.onrender.com/api/profile",
         update,
         { headers: { Authorization: `Bearer ${token}` } }
       );

@@ -11,7 +11,7 @@ const InstructorDashboard = () => {
       setLoading(true);
       setError("");
       try {
-        const res = await fetch("http://localhost:5001/api/courses");
+        const res = await fetch("https://lms-backend-5s5x.onrender.com/api/courses");
         const data = await res.json();
         if (!res.ok) throw new Error(data.message || "Failed to fetch courses");
         if (user && user.role === 'admin') {
@@ -32,7 +32,7 @@ const InstructorDashboard = () => {
     if (!window.confirm("Are you sure you want to delete this course?")) return;
     try {
       const token = localStorage.getItem("token");
-              const res = await fetch(`http://localhost:5001/api/courses/${id}`, {
+              const res = await fetch(`https://lms-backend-5s5x.onrender.com/api/courses/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

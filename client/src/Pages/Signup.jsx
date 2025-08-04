@@ -17,7 +17,7 @@ const Signup = () => {
     setLoading(true);
     setMessage("");
     try {
-      const res = await axios.post("http://localhost:5001/api/auth/signup", { ...form, role: "student" });
+              const res = await axios.post("https://lms-backend-5s5x.onrender.com/api/auth/signup", { ...form, role: "student" });
       setMessage(res.data.message || "Signup successful!");
       // Store token and user info as needed
       if (res.data.token && res.data.user) {

@@ -37,7 +37,7 @@ const Navbar = ({ cartCount = 0 }) => {
       const token = localStorage.getItem("token");
       if (!token) return;
       try {
-        const res = await fetch("http://localhost:5001/api/profile", {
+        const res = await fetch("https://lms-backend-5s5x.onrender.com/api/profile", {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();
@@ -64,7 +64,7 @@ const Navbar = ({ cartCount = 0 }) => {
     const fetchInstructorCourses = async () => {
       if (user && user.role === 'instructor') {
         try {
-          const res = await fetch("http://localhost:5001/api/courses");
+          const res = await fetch("https://lms-backend-5s5x.onrender.com/api/courses");
           const data = await res.json();
           if (Array.isArray(data)) {
             setHasPublishedCourses(data.some(c => c.published && c.instructor && (c.instructor._id === user._id || c.instructor === user._id)));
@@ -138,7 +138,9 @@ const Navbar = ({ cartCount = 0 }) => {
       }}>
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <h1 style={{ fontSize: '30px', fontWeight: '800', color: '#111' }}>Traincape</h1>
+          <Link to="/" style={{ textDecoration: 'none', color: '#111' }}>
+            <h1 style={{ fontSize: '30px', fontWeight: '800', color: '#111', cursor: 'pointer' }}>Traincape LMS</h1>
+          </Link>
         </div>
 
         {/* Desktop Search Bar */}
@@ -187,7 +189,6 @@ const Navbar = ({ cartCount = 0 }) => {
           fontSize: '18px',
           fontWeight: '600'
         }}>
-          <Link to="/" style={{ textDecoration: 'none', color: '#111' }}>Home</Link>
           <Link to="/plans" style={{ textDecoration: 'none', color: '#111' }}>Plans & Pricing</Link>
           <Link to="/courses" style={{ textDecoration: 'none', color: '#111' }}>Courses</Link>
           <a href="https://traincapetech.in/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: '#111' }}>Business</a>
@@ -442,26 +443,7 @@ const Navbar = ({ cartCount = 0 }) => {
               flexDirection: 'column',
               gap: '0'
             }}>
-              <Link 
-                to="/" 
-                style={{
-                  display: 'block',
-                  padding: '16px 12px',
-                  color: '#111',
-                  textDecoration: 'none',
-                  borderBottom: '1px solid #f0f0f0',
-                  fontSize: '16px',
-                  fontWeight: '500',
-                  borderRadius: '8px',
-                  marginBottom: '4px',
-                  transition: 'background-color 0.2s'
-                }}
-                onClick={() => setMobileMenuOpen(false)}
-                onMouseEnter={(e) => e.target.style.backgroundColor = '#f8f9fa'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-              >
-                🏠 Home
-              </Link>
+
               <Link 
                 to="/plans" 
                 style={{

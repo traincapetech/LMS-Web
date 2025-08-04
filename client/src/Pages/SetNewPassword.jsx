@@ -21,7 +21,7 @@ const SetNewPassword = () => {
     setLoading(true);
     setMessage("");
     try {
-      const res = await axios.post("http://localhost:5001/api/auth/reset-password", form);
+              const res = await axios.post("https://lms-backend-5s5x.onrender.com/api/auth/reset-password", form);
       setMessage(res.data.message || "Password reset successful. You can now log in.");
     } catch (err) {
       setMessage(err.response?.data?.message || "Failed to reset password");

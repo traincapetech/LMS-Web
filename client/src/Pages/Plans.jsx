@@ -657,9 +657,9 @@ const Plans = () => {
         <div className="flex flex-wrap justify-center gap-[30px]">
           {[
             { img: kartikeyImg, name: 'Kartikey', quote: '"Because of this course I was able to clear my two interviews and land my dream job. The practical approach made all the difference."', role: 'Software Engineer' },
-            { img: shubhImg, name: 'Shubh', quote: '"This helped me transition from frontend to full stack engineer. The comprehensive curriculum and hands-on projects were invaluable."', role: 'Full Stack Developer' },
+            // { img: shubhImg, name: 'Shubh', quote: '"This helped me transition from frontend to full stack engineer. The comprehensive curriculum and hands-on projects were invaluable."', role: 'Full Stack Developer' },
             { img: vikasImg, name: 'Vikas', quote: '"I credit my success to the solid foundation this course gave me. The instructors are world-class and the community is incredibly supportive."', role: 'Tech Lead' },
-            { img: ashuImg, name: 'Ashu', quote: '"Highly recommended for serious learners in web development.The real-world projects and industry best practices are game-changers."', role: 'web develope' }
+            // { img: ashuImg, name: 'Ashu', quote: '"Highly recommended for serious learners in web development.The real-world projects and industry best practices are game-changers."', role: 'web develope' }
           ].map((testimonial, index) => (
             <div 
               key={index}

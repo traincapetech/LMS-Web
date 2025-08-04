@@ -1,5 +1,6 @@
-import React, { useState, createContext, useContext } from "react";
+import React, { useState, createContext, useContext, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { logNetworkStatus } from "./utils/networkTest";
 import Navbar from "./components/Navbar";
 import Plans from "./Pages/Plans";
 import Home from "./Pages/Home";
@@ -50,6 +51,12 @@ const Settings = () => <div style={{padding:'2rem'}}>Settings Page</div>;
 function App() {
   const [cart, setCart] = useState([]);
   const [cartCount, setCartCount] = useState(0);
+
+  // Run network diagnostics on app start (commented out to avoid CORS issues)
+  // useEffect(() => {
+  //   console.log('🚀 App starting - running network diagnostics...');
+  //   logNetworkStatus();
+  // }, []);
 
   // Calculate total cart count from both local state and localStorage
   const getCartCount = () => {
