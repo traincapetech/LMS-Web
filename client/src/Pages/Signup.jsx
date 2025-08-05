@@ -18,7 +18,7 @@ const Signup = () => {
     setMessage("");
     try {
               const res = await axios.post("https://lms-backend-5s5x.onrender.com/api/auth/signup", { ...form, role: "student" });
-      setMessage(res.data.message || "Signup successful!");
+      setMessage(res.data.message || "Signup successful! Redirecting to your profile...");
       // Store token and user info as needed
       if (res.data.token && res.data.user) {
         localStorage.setItem("token", res.data.token);
@@ -26,8 +26,8 @@ const Signup = () => {
         window.location.reload(); // Force Navbar to update
       }
       setTimeout(() => {
-        navigate("/");
-      }, 1000); // Navigate to home after 1 second
+        navigate("/profile");
+      }, 1000); // Navigate to profile after 1 second
     } catch (err) {
       setMessage(err.response?.data?.message || "Signup failed");
     } finally {

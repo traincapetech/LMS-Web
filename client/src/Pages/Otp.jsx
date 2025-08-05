@@ -25,6 +25,10 @@ const Otp = ({ email, otpFromServer, onSuccess }) => {
       // Save user to localStorage
       if (data.user) {
         localStorage.setItem("user", JSON.stringify(data.user));
+        // If there's a token, store it too
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+        }
       }
       if (onSuccess) onSuccess();
     } catch (err) {

@@ -32,7 +32,7 @@ const Form = () => {
         setLoading(false);
         return;
       }
-      setOtpFromServer(data.otp); // For demo, assume backend returns OTP
+      // OTP is now sent via email, no need to store it in frontend
       setStep(2);
     } catch (error) {
       alert("Something went wrong. Please try again later.");
@@ -41,9 +41,9 @@ const Form = () => {
     }
   };
 
-  // After OTP verification, go to course creation steps
+  // After OTP verification, go to profile
   const handleOtpSuccess = () => {
-    navigate("/create", { state: { name, email } });
+    navigate("/profile");
   };
 
   return (

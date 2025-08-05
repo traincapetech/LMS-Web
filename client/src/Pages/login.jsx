@@ -27,7 +27,7 @@ const Login = () => {
       console.log('Token type:', typeof res.data.token);
       console.log('Token length:', res.data.token?.length);
       
-      setMessage("Login successful!");
+      setMessage("Login successful! Redirecting to your profile...");
       
       // Store token and user info as needed
       if (res.data.token) {
@@ -54,8 +54,8 @@ const Login = () => {
       }
       
       setTimeout(() => {
-        window.location.href = "/";
-      }, 1000); // Navigate to home after 1 second
+        window.location.href = "/profile";
+      }, 1000); // Navigate to profile after 1 second
       // Redirect or update UI as needed
     } catch (err) {
       console.error('Login error:', err);
