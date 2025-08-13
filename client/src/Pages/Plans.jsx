@@ -3,6 +3,7 @@ import kartikeyImg from "../assets/kartikey.jpg";
 import shubhImg from "../assets/shubh.jpg";
 import vikasImg from "../assets/vikas.jpg";
 import ashuImg from "../assets/ashu.jpg";
+import { addSubscriptionToCart } from "../utils/cartUtils";
 
 const faqs = [
   {
@@ -300,22 +301,7 @@ const Plans = () => {
                    ]
                  };
                  
-                 // Get existing cart from localStorage
-                 const existingCart = JSON.parse(localStorage.getItem('cart') || '[]');
-                 
-                 // Check if plan already exists in cart
-                 const existingIndex = existingCart.findIndex(item => item.id === plan.id);
-                 
-                                   if (existingIndex === -1) {
-                    // Add to cart
-                    existingCart.push(plan);
-                    localStorage.setItem('cart', JSON.stringify(existingCart));
-                    // Dispatch custom event to update cart count
-                    window.dispatchEvent(new Event('cartUpdated'));
-                    alert('Personal Plan added to cart! 🛒');
-                  } else {
-                    alert('Personal Plan is already in your cart! ✅');
-                  }
+                 addSubscriptionToCart(plan);
                }}
              >
                Start Free Trial
@@ -476,22 +462,7 @@ const Plans = () => {
                    ]
                  };
                  
-                 // Get existing cart from localStorage
-                 const existingCart = JSON.parse(localStorage.getItem('cart') || '[]');
-                 
-                 // Check if plan already exists in cart
-                 const existingIndex = existingCart.findIndex(item => item.id === plan.id);
-                 
-                                   if (existingIndex === -1) {
-                    // Add to cart
-                    existingCart.push(plan);
-                    localStorage.setItem('cart', JSON.stringify(existingCart));
-                    // Dispatch custom event to update cart count
-                    window.dispatchEvent(new Event('cartUpdated'));
-                    alert('Team Plan added to cart! 🛒');
-                  } else {
-                    alert('Team Plan is already in your cart! ✅');
-                  }
+                 addSubscriptionToCart(plan);
                }}
              >
                Start Team Trial

@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import img1 from "../assets/img1.png";
 import img2 from "../assets/img2.png";
 import img4 from "../assets/img4.png";
+import img3 from "../assets/img3.jpeg";
+import img4Jpeg from "../assets/img4.jpeg";
+import img5 from "../assets/img5.png";
 import {
   FaRobot,
   FaPenNib,
@@ -22,10 +25,104 @@ import {
   FaHandsHelping,
 } from "react-icons/fa";
 import { SiUnity, SiCisco } from "react-icons/si";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { forceScrollToTop, setupGlobalScrollToTop, addSubscriptionToCart } from "../utils/cartUtils";
 
 const Home = () => {
   const navigate = useNavigate();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  const heroImages = [img1, img3, img4Jpeg, img5];
+  
+  useEffect(() => {
+    const cleanup = setupGlobalScrollToTop();
+    
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === heroImages.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 3000); // Change image every 3 seconds
+    
+    return () => {
+      clearInterval(interval);
+      cleanup();
+    };
+  }, [heroImages.length]);
+  
+  const goToImage = (index) => {
+    setCurrentImageIndex(index);
+  };
+  
+  const goToPrevious = () => {
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === 0 ? heroImages.length - 1 : prevIndex - 1
+    );
+  };
+  
+  const goToNext = () => {
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === heroImages.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const handleLinkClick = () => {
+    forceScrollToTop();
+  };
+
+  const handleExploreCourses = () => {
+    forceScrollToTop();
+    navigate("/courses");
+  };
+
+  const handleAILearning = () => {
+    forceScrollToTop();
+    navigate("/courses");
+  };
+
+  const handleShowAllTrending = () => {
+    forceScrollToTop();
+    navigate("/courses");
+  };
+
+  const handlePersonalSubscription = () => {
+    const plan = {
+      id: 'personal-plan-home',
+      name: 'Personal Plan',
+      price: 400,
+      type: 'subscription',
+      description: 'For you · Individual - Access to 26,000+ top courses',
+      features: [
+        'Access to 26,000+ top courses',
+        'Certification prep',
+        'Goal-focused recommendations',
+        'AI-powered coding exercises'
+      ]
+    };
+    addSubscriptionToCart(plan);
+  };
+
+  const handleRequestDemo = () => {
+    window.open('https://traincapetech.in/contact-us', '_blank');
+  };
+
+  const handleTeamSubscription = () => {
+    const plan = {
+      id: 'team-plan-home',
+      name: 'Team Plan',
+      price: 2000,
+      type: 'subscription',
+      description: 'For your team - Access to 13,000+ top courses',
+      features: [
+        'Access to 13,000+ top courses',
+        'Certification prep',
+        'Goal-focused recommendations',
+        'AI-powered coding exercises',
+        'Analytics and adoption reports'
+      ]
+    };
+    addSubscriptionToCart(plan);
+  };
+
   return (
     <div className="home-container">
       {/* Hero Section */}
@@ -37,10 +134,36 @@ const Home = () => {
             skills, earn certifications, or teach students from around the globe
             with ease and flexibility.
           </p>
-          <button className="explore-btn" onClick={() => navigate("/courses")}>Explore Courses</button>
+          <button className="explore-btn" onClick={handleExploreCourses}>Explore Courses</button>
         </div>
         <div className="hero-image">
-          <img src={img1} alt="Traincape LMS" />
+          <div className="carousel-container">
+            <img 
+              src={heroImages[currentImageIndex]} 
+              alt="Traincape LMS" 
+              className="carousel-image"
+            />
+            
+            {/* Navigation Arrows 
+            <button className="carousel-arrow carousel-arrow-left" onClick={goToPrevious}>
+              ‹
+            </button>
+            <button className="carousel-arrow carousel-arrow-right" onClick={goToNext}>
+              ›
+            </button>
+            */}
+            
+            {/* Navigation Dots */}
+            <div className="carousel-dots">
+              {heroImages.map((_, index) => (
+                <button
+                  key={index}
+                  className={`carousel-dot ${index === currentImageIndex ? 'active' : ''}`}
+                  onClick={() => goToImage(index)}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -165,181 +288,184 @@ const Home = () => {
             />
           </div>
         </div>
-        <section className="pricing-section">
-  <h2 className="pricing-title">Accelerate Growth — For You or Your Organization</h2>
-  <p className="pricing-subtitle">
-    Reach goals faster with one of our plans. Try one free today or contact sales to learn more.
-  </p>
-  <div className="pricing-cards">
-    {/* Personal Plan */}
-    <div className="pricing-card">
-      <div className="plan-header">
-        <span className="plan-icon"><i className="fas fa-user"></i></span>
-        <div>
-          <h3>Personal Plan</h3>
-          <p>For you</p>
+      </div>
+
+      {/* Pricing Section */}
+      <section className="pricing-section">
+        <h2 className="pricing-title">Accelerate Growth — For You or Your Organization</h2>
+        <p className="pricing-subtitle">
+          Reach goals faster with one of our plans. Try one free today or contact sales to learn more.
+        </p>
+        <div className="pricing-cards">
+          {/* Personal Plan */}
+          <div className="pricing-card">
+            <div className="plan-header">
+              <span className="plan-icon"><i className="fas fa-user"></i></span>
+              <div>
+                <h3>Personal Plan</h3>
+                <p>For you</p>
+              </div>
+            </div>
+            <p className="plan-price">
+              <span className="original-price">₹500</span>{" "}
+              <span className="discounted-price">₹400 /month</span>
+            </p>
+            <p className="plan-discount">20% off for the first 1 year(s)</p>
+            <button className="plan-btn" onClick={handlePersonalSubscription}>Start subscription →</button>
+            <ul className="plan-features">
+              <li><i className="fas fa-check-circle check-icon"></i> Access to 26,000+ top courses</li>
+              <li><i className="fas fa-check-circle check-icon"></i> Certification prep</li>
+              <li><i className="fas fa-check-circle check-icon"></i> Goal-focused recommendations</li>
+              <li><i className="fas fa-check-circle check-icon"></i> AI-powered coding exercises</li>
+            </ul>
+          </div>
+
+          {/* Team Plan */}
+          <div className="pricing-card">
+            <div className="plan-header">
+              <span className="plan-icon"><i className="fas fa-users"></i></span>
+              <div>
+                <h3>Team Plan</h3>
+                <p>For your team</p>
+              </div>
+            </div>
+            <p className="plan-price">₹2,000 /month per user</p>
+            <button className="plan-btn" onClick={handleTeamSubscription}>Start subscription →</button>
+            <ul className="plan-features">
+              <li><i className="fas fa-check-circle check-icon"></i> Access to 13,000+ top courses</li>
+              <li><i className="fas fa-check-circle check-icon"></i> Certification prep</li>
+              <li><i className="fas fa-check-circle check-icon"></i> Goal-focused recommendations</li>
+              <li><i className="fas fa-check-circle check-icon"></i> AI-powered coding exercises</li>
+              <li><i className="fas fa-check-circle check-icon"></i> Analytics and adoption reports</li>
+            </ul>
+          </div>
+
+          {/* Enterprise Plan */}
+          <div className="pricing-card">
+            <div className="plan-header">
+              <span className="plan-icon"><i className="fas fa-building"></i></span>
+              <div>
+                <h3>Enterprise Plan</h3>
+                <p>For your whole organization</p>
+              </div>
+            </div>
+            <p className="plan-price">Contact sales for pricing</p>
+            <button className="plan-btn" onClick={handleRequestDemo}>Request a demo →</button>
+            <ul className="plan-features">
+              <li><i className="fas fa-check-circle check-icon"></i> Access to 30,000+ top courses</li>
+              <li><i className="fas fa-check-circle check-icon"></i> Certification prep</li>
+              <li><i className="fas fa-check-circle check-icon"></i> Goal-focused recommendations</li>
+              <li><i className="fas fa-check-circle check-icon"></i> AI-powered coding exercises</li>
+              <li><i className="fas fa-check-circle check-icon"></i> Advanced analytics and insights</li>
+              <li><i className="fas fa-check-circle check-icon"></i> Dedicated customer success team</li>
+              <li><i className="fas fa-check-circle check-icon"></i> International course collection (15+ languages)</li>
+              <li><i className="fas fa-check-circle check-icon"></i> Customizable content</li>
+              <li><i className="fas fa-check-circle check-icon"></i> Hands-on tech training with add-on</li>
+              <li><i className="fas fa-check-circle check-icon"></i> Strategic implementation services</li>
+            </ul>
+          </div>
         </div>
-      </div>
-      <p className="plan-price">
-        <span className="original-price">₹500</span>{" "}
-        <span className="discounted-price">₹400 /month</span>
-      </p>
-      <p className="plan-discount">20% off for the first 1 year(s)</p>
-      <button className="plan-btn">Start subscription →</button>
-      <ul className="plan-features">
-        <li><i className="fas fa-check-circle check-icon"></i> Access to 26,000+ top courses</li>
-        <li><i className="fas fa-check-circle check-icon"></i> Certification prep</li>
-        <li><i className="fas fa-check-circle check-icon"></i> Goal-focused recommendations</li>
-        <li><i className="fas fa-check-circle check-icon"></i> AI-powered coding exercises</li>
-      </ul>
-    </div>
+      </section>
 
-    {/* Team Plan */}
-    <div className="pricing-card">
-      <div className="plan-header">
-        <span className="plan-icon"><i className="fas fa-users"></i></span>
-        <div>
-          <h3>Team Plan</h3>
-          <p>For your team</p>
+      <section className="testimonials-section">
+        <h2 className="testimonials-heading">See what others are achieving through learning</h2>
+        <div className="testimonials-container">
+          {[
+            {
+              quote: "Because of this course I was able to clear my two interviews... Thanks for making such wonderful content.",
+              name: "Diksha S",
+              initials: "DS",
+              course: "Business Intelligence (BI)",
+              link: "#"
+            },
+            {
+              quote: "This has helped me so much in my career...I joined as a frontend engineer and eventually transitioned to full stack engineer with the help of this course.",
+              name: "Chethan B",
+              initials: "CB",
+              course: "Go (golang)",
+              link: "#"
+            },
+            {
+              quote: "Today, I am a software developer, and I credit a significant part of my success to the solid foundation laid by this course.",
+              name: "Batchu K",
+              initials: "BK",
+              course: "Java",
+              link: "#"
+            },
+            {
+              quote: "I would highly recommend this Web Development Bootcamp to anyone interested in pursuing a career in web development or looking to enhance their skills in this field.",
+              name: "Ankit K",
+              initials: "AK",
+              course: "Web Development",
+              link: "#"
+            }
+          ].map((testimonial, index) => (
+            <div className="testimonial-card" key={index}>
+              <p className="testimonial-quote">"{testimonial.quote}"</p>
+              <div className="testimonial-profile">
+                <div className="testimonial-avatar">{testimonial.initials}</div>
+                <div className="testimonial-name">{testimonial.name}</div>
+              </div>
+              <a href={testimonial.link} className="testimonial-link">
+                View this {testimonial.course} course
+              </a>
+            </div>
+          ))}
         </div>
-      </div>
-      <p className="plan-price">₹2,000 /month per user</p>
-      <button className="plan-btn">Start subscription →</button>
-      <ul className="plan-features">
-        <li><i className="fas fa-check-circle check-icon"></i> Access to 13,000+ top courses</li>
-        <li><i className="fas fa-check-circle check-icon"></i> Certification prep</li>
-        <li><i className="fas fa-check-circle check-icon"></i> Goal-focused recommendations</li>
-        <li><i className="fas fa-check-circle check-icon"></i> AI-powered coding exercises</li>
-        <li><i className="fas fa-check-circle check-icon"></i> Analytics and adoption reports</li>
-      </ul>
-    </div>
+      </section>
 
-    {/* Enterprise Plan */}
-    <div className="pricing-card">
-      <div className="plan-header">
-        <span className="plan-icon"><i className="fas fa-building"></i></span>
-        <div>
-          <h3>Enterprise Plan</h3>
-          <p>For your whole organization</p>
+      <section className="ai-section">
+        <div className="ai-content">
+          <h2 className="ai-title">AI for Business Leaders</h2>
+          <p className="ai-description">
+            Build an AI-habit for you and your team that builds hands-on skills to help you lead effectively.
+          </p>
+          <button className="ai-button" onClick={handleAILearning}>Start Learning →</button>
         </div>
-      </div>
-      <p className="plan-price">Contact sales for pricing</p>
-      <button className="plan-btn">Request a demo →</button>
-      <ul className="plan-features">
-        <li><i className="fas fa-check-circle check-icon"></i> Access to 30,000+ top courses</li>
-        <li><i className="fas fa-check-circle check-icon"></i> Certification prep</li>
-        <li><i className="fas fa-check-circle check-icon"></i> Goal-focused recommendations</li>
-        <li><i className="fas fa-check-circle check-icon"></i> AI-powered coding exercises</li>
-        <li><i className="fas fa-check-circle check-icon"></i> Advanced analytics and insights</li>
-        <li><i className="fas fa-check-circle check-icon"></i> Dedicated customer success team</li>
-        <li><i className="fas fa-check-circle check-icon"></i> International course collection (15+ languages)</li>
-        <li><i className="fas fa-check-circle check-icon"></i> Customizable content</li>
-        <li><i className="fas fa-check-circle check-icon"></i> Hands-on tech training with add-on</li>
-        <li><i className="fas fa-check-circle check-icon"></i> Strategic implementation services</li>
-      </ul>
-    </div>
-  </div>
-</section>
 
-<section className="testimonials-section">
-  <h2 className="testimonials-heading">See what others are achieving through learning</h2>
-  <div className="testimonials-container">
-    {[
-      {
-        quote: "Because of this course I was able to clear my two interviews... Thanks for making such wonderful content.",
-        name: "Diksha S",
-        initials: "DS",
-        course: "Business Intelligence (BI)",
-        link: "#"
-      },
-      {
-        quote: "This has helped me so much in my career...I joined as a frontend engineer and eventually transitioned to full stack engineer with the help of this course.",
-        name: "Chethan B",
-        initials: "CB",
-        course: "Go (golang)",
-        link: "#"
-      },
-      {
-        quote: "Today, I am a software developer, and I credit a significant part of my success to the solid foundation laid by this course.",
-        name: "Batchu K",
-        initials: "BK",
-        course: "Java",
-        link: "#"
-      },
-      {
-        quote: "I would highly recommend this Web Development Bootcamp to anyone interested in pursuing a career in web development or looking to enhance their skills in this field.",
-        name: "Ankit K",
-        initials: "AK",
-        course: "Web Development",
-        link: "#"
-      }
-    ].map((testimonial, index) => (
-      <div className="testimonial-card" key={index}>
-        <p className="testimonial-quote">“{testimonial.quote}”</p>
-        <div className="testimonial-profile">
-          <div className="testimonial-avatar">{testimonial.initials}</div>
-          <div className="testimonial-name">{testimonial.name}</div>
+        <div className="ai-image-wrapper">
+          <img src={img4} alt="AI Stack" className="ai-stack-image" />
         </div>
-        <a href={testimonial.link} className="testimonial-link">
-          View this {testimonial.course} course
-        </a>
-      </div>
-    ))}
-  </div>
-</section>
+      </section>
 
-<section className="ai-section">
-  <div className="ai-content">
-    <h2 className="ai-title">AI for Business Leaders</h2>
-    <p className="ai-description">
-      Build an AI-habit for you and your team that builds hands-on skills to help you lead effectively.
-    </p>
-    <button className="ai-button">Start Learning →</button>
-  </div>
+      <section className="trending-now-plain">
+        <h2 className="trending-title">Trending Now</h2>
+        <div className="trending-columns">
+          <div className="trending-column">
+            <h3>ChatGPT is a top skill</h3>
+            <Link to="/chatgpt-courses" className="purple-link" onClick={handleLinkClick}>See ChatGPT courses →</Link>
+            <p className="learner-count">4,759,049 learners</p>
+            <button className="outline-btn" onClick={handleShowAllTrending}>Show all trending skills ↗</button>
+          </div>
 
-  <div className="ai-image-wrapper">
-           <img src={img4}alt="AI Stack" className="ai-stack-image" />
-  </div>
-</section>
-<section className="trending-now-plain">
-  <h2 className="trending-title">Trending Now</h2>
-  <div className="trending-columns">
-    <div className="trending-column">
-      <h3>ChatGPT is a top skill</h3>
-      <a href="#" className="purple-link">See ChatGPT courses →</a>
-      <p className="learner-count">4,759,049 learners</p>
-      <button className="outline-btn">Show all trending skills ↗</button>
-    </div>
+          <div className="trending-column">
+            <h4>Development</h4>
+            <ul>
+              <li><Link to="/python-courses" onClick={handleLinkClick}>Python →</Link><span>48,715,474 learners</span></li>
+              <li><Link to="/web-development-courses" onClick={handleLinkClick}>Web Development</Link><span>14,181,896 learners</span></li>
+              <li><Link to="/data-science-courses" onClick={handleLinkClick}>Data Science</Link><span>7,974,796 learners</span></li>
+            </ul>
+          </div>
 
-    <div className="trending-column">
-      <h4>Development</h4>
-      <ul>
-        <li><a href="#">Python →</a><span>48,715,474 learners</span></li>
-        <li><a href="#">Web Development</a><span>14,181,896 learners</span></li>
-        <li><a href="#">Data Science</a><span>7,974,796 learners</span></li>
-      </ul>
-    </div>
+          <div className="trending-column">
+            <h4>Design</h4>
+            <ul>
+              <li><Link to="/blender-courses" onClick={handleLinkClick}>Blender</Link><span>2,986,829 learners</span></li>
+              <li><Link to="/graphic-design-courses" onClick={handleLinkClick}>Graphic Design</Link><span>4,571,255 learners</span></li>
+              <li><Link to="/ux-design-courses" onClick={handleLinkClick}>UX Design</Link><span>2,102,082 learners</span></li>
+            </ul>
+          </div>
 
-    <div className="trending-column">
-      <h4>Design</h4>
-      <ul>
-        <li><a href="#">Blender</a><span>2,986,829 learners</span></li>
-        <li><a href="#">Graphic Design</a><span>4,571,255 learners</span></li>
-        <li><a href="#">UX Design</a><span>2,102,082 learners</span></li>
-      </ul>
-    </div>
-
-    <div className="trending-column">
-      <h4>Business</h4>
-      <ul>
-        <li><a href="#">PMI Project Management Professional (PMP)</a><span>2,669,350 learners</span></li>
-        <li><a href="#">Microsoft Power BI</a><span>4,816,152 learners</span></li>
-        <li><a href="#">CAPM</a><span>443,400 learners</span></li>
-      </ul>
-    </div>
-  </div>
-</section>
-      </div>
+          <div className="trending-column">
+            <h4>Business</h4>
+            <ul>
+              <li><Link to="/project-management-courses" onClick={handleLinkClick}>PMI Project Management Professional (PMP)</Link><span>2,669,350 learners</span></li>
+              <li><Link to="/powerbi-courses" onClick={handleLinkClick}>Microsoft Power BI</Link><span>4,816,152 learners</span></li>
+              <li><Link to="/project-management-courses" onClick={handleLinkClick}>CAPM</Link><span>443,400 learners</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

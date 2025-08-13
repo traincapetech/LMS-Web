@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Get API URL from environment variable or use default
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://lms-backend-5s5x.onrender.com/api';
+// Get API URL from environment variable or use localhost
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
 // Create axios instance with default configuration
 const api = axios.create({
@@ -99,6 +99,13 @@ export const adminAPI = {
   getPendingCourses: () => api.get('/pending-courses/'),
   approvePendingCourse: (id) => api.put(`/pending-courses/${id}/approve`),
   rejectPendingCourse: (id) => api.put(`/pending-courses/${id}/reject`),
+};
+
+export const dashboardAPI = {
+  saveDashboardData: (data) => api.post('/courses/dashboard/save', data),
+  getDashboardData: () => api.get('/courses/dashboard/data'),
+  submitCourseForReview: (data) => api.post('/pending-courses/apply', data),
+  updateDashboardStep: (step, data) => api.put(`/courses/dashboard/step/${step}`, data),
 };
 
 export const otpAPI = {

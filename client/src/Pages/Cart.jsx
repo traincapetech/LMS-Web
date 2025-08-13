@@ -3,6 +3,7 @@ import { CartContext } from '../App';
 import { FaHtml5, FaCuttlefish, FaCode } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { debugCart, getCartSummary } from '../utils/cartUtils';
 
 const courseIcons = {
   'ibm-html': <FaHtml5 size={40} color="#e44d26" />,
@@ -306,6 +307,26 @@ const Cart = () => {
           }}
         >
           🔄 Refresh
+        </button>
+        <button 
+          onClick={() => {
+            debugCart();
+            const summary = getCartSummary();
+            alert(`Cart Summary:\nTotal Items: ${summary.totalItems}\nCourses: ${summary.courses}\nSubscriptions: ${summary.subscriptions}\nTotal Value: ₹${summary.totalValue}`);
+          }}
+          style={{
+            background: '#10b981',
+            color: 'white',
+            border: 'none',
+            borderRadius: 6,
+            padding: '8px 16px',
+            fontSize: 14,
+            cursor: 'pointer',
+            fontWeight: 600,
+            marginLeft: '10px'
+          }}
+        >
+          🔍 Debug Cart
         </button>
       </div>
       

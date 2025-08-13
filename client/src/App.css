@@ -1,11 +1,10 @@
-
-
 body {
     margin: 0;
     font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f6f9;
     color: #1a1a1a;
     line-height: 1.6;
+    scroll-behavior: smooth;
   }
   
   /* Container */
@@ -66,6 +65,83 @@ body {
     width: 100%;
     border-radius: 1.2rem;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Carousel Styles */
+  .carousel-container {
+    position: relative;
+    max-width: 600px;
+    width: 100%;
+    border-radius: 1.2rem;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .carousel-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  .carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 10;
+  }
+
+  .carousel-arrow:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .carousel-arrow-left {
+    left: 15px;
+  }
+
+  .carousel-arrow-right {
+    right: 15px;
+  }
+
+  .carousel-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+  }
+
+  .carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .carousel-dot.active {
+    background: rgba(255, 255, 255, 1);
+    transform: scale(1.2);
+  }
+
+  .carousel-dot:hover {
+    background: rgba(255, 255, 255, 0.8);
   }
   
   /* Career Section */
@@ -1188,16 +1264,6 @@ body {
       font-size: 1.8rem;
     }
     
-    .ai-section {
-      flex-direction: column;
-      padding: 60px 20px;
-      text-align: center;
-    }
-    
-    .ai-content {
-      max-width: 100%;
-    }
-    
     .pricing-cards {
       flex-direction: column;
       align-items: center;
@@ -1485,6 +1551,1572 @@ body {
       grid-template-columns: repeat(2, 1fr);
     }
   }
+  
+  
+  
+  
+/* ===== COURSE PAGES STYLING ===== */
+
+/* Course Page Container */
+.chatgpt-courses-page,
+.python-courses-page,
+.web-development-courses-page,
+.data-science-courses-page,
+.blender-courses-page,
+.graphic-design-courses-page,
+.ux-design-courses-page,
+.project-management-courses-page,
+.powerbi-courses-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  overflow-x: hidden;
+}
+
+/* Hero Section */
+.chatgpt-hero,
+.python-hero,
+.web-dev-hero,
+.data-science-hero,
+.blender-hero,
+.graphic-design-hero,
+.ux-design-hero,
+.project-management-hero,
+.powerbi-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 3rem;
+  min-height: 80vh;
+}
+
+.hero-content {
+  flex: 1;
+  max-width: 600px;
+}
+
+.hero-content h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.hero-content p {
+  font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+  color: #f0f0f0;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.stat {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-number {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #e0e0e0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hero-image {
+  flex: 1;
+  max-width: 500px;
+  position: relative;
+}
+
+.hero-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.hero-image:hover img {
+  transform: scale(1.05);
+}
+
+/* Why Learn Section */
+.why-learn {
+  padding: 5rem 2rem;
+  background: #ffffff;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.why-learn h2 {
+  text-align: center;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 3rem;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.benefit-card {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
+}
+
+.benefit-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.benefit-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.benefit-card h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
+
+.benefit-card p {
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Course Categories Section */
+.course-categories {
+  padding: 5rem 2rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.course-categories h2 {
+  text-align: center;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 3rem;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.category-card {
+  background: #ffffff;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
+}
+
+.category-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.category-card h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
+
+.category-card p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.course-count {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Featured Courses Section */
+.featured-courses {
+  padding: 5rem 2rem;
+  background: #ffffff;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.featured-courses h2 {
+  text-align: center;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 3rem;
+}
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.course-card {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
+}
+
+.course-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.course-image {
+  position: relative;
+  overflow: hidden;
+}
+
+.course-image img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.course-card:hover .course-image img {
+  transform: scale(1.1);
+}
+
+.course-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.course-card:hover .course-overlay {
+  opacity: 1;
+}
+
+.preview-btn {
+  background: #ffffff;
+  color: #1a1a1a;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.preview-btn:hover {
+  background: #f0f0f0;
+  transform: scale(1.05);
+}
+
+.course-content {
+  padding: 1.5rem;
+}
+
+.course-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.course-instructor {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.course-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.stars {
+  color: #ffd700;
+  font-size: 1rem;
+}
+
+.rating-number {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.students {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.course-description {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.course-meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.course-meta span {
+  background: #f8f9fa;
+  color: #666;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.course-pricing {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.current-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.original-price {
+  color: #999;
+  text-decoration: line-through;
+  font-size: 1.1rem;
+}
+
+.discount {
+  background: #ff6b6b;
+  color: #ffffff;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.enroll-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.enroll-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+/* Success Stories Section */
+.success-stories {
+  padding: 5rem 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.success-stories h2 {
+  text-align: center;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 3rem;
+}
+
+.stories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.story-card {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.story-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.story-avatar {
+  margin-bottom: 1rem;
+}
+
+.story-avatar img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.story-content p {
+  color: #f0f0f0;
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.story-content h4 {
+  color: #ffffff;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.story-content span {
+  color: #e0e0e0;
+  font-size: 0.9rem;
+}
+
+/* CTA Section */
+.cta-section {
+  padding: 5rem 2rem;
+  background: #ffffff;
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cta-content h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
+
+.cta-content p {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.primary-btn,
+.secondary-btn {
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  font-size: 1rem;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.secondary-btn {
+  background: transparent;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.secondary-btn:hover {
+  background: #667eea;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Footer Navigation */
+.footer-nav {
+  padding: 3rem 2rem;
+  background: #1a1a1a;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.nav-link {
+  color: #ffffff;
+  text-decoration: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Responsive Design for Course Pages */
+@media (max-width: 768px) {
+  .chatgpt-hero,
+  .python-hero,
+  .web-dev-hero,
+  .data-science-hero,
+  .blender-hero,
+  .graphic-design-hero,
+  .ux-design-hero,
+  .project-management-hero,
+  .powerbi-hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 3rem 1rem;
+    gap: 2rem;
+  }
+
+  .hero-stats {
+    justify-content: center;
+  }
+
+  .benefits-grid,
+  .category-grid,
+  .courses-grid,
+  .stories-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .why-learn,
+  .course-categories,
+  .featured-courses,
+  .success-stories,
+  .cta-section {
+    padding: 3rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+  }
+
+  .stat {
+    padding: 0.8rem 1rem;
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
+  }
+
+  .benefit-card,
+  .category-card,
+  .course-card {
+    padding: 1.5rem;
+  }
+
+  .course-meta,
+  .course-pricing {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+/* Animation Classes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.benefit-card,
+.category-card,
+.course-card,
+.story-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Hover Effects */
+.benefit-card:hover,
+.category-card:hover,
+.course-card:hover,
+.story-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Loading States */
+.course-card.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Focus States for Accessibility */
+.enroll-btn:focus,
+.preview-btn:focus,
+.nav-link:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .why-learn,
+  .featured-courses,
+  .cta-section {
+    background: #1a1a1a;
+    color: #ffffff;
+  }
+
+  .benefit-card,
+  .category-card,
+  .course-card {
+    background: #2a2a2a;
+    color: #ffffff;
+    border-color: #3a3a3a;
+  }
+
+  .course-title,
+  .benefit-card h3,
+  .category-card h3 {
+    color: #ffffff;
+  }
+
+  .course-description,
+  .benefit-card p,
+  .category-card p {
+    color: #cccccc;
+  }
+}
+
+/* Additional Course Page Sections */
+.python-applications,
+.web-dev-stack,
+.data-science-tools,
+.blender-workflow,
+.design-principles,
+.ux-methodology,
+.pm-frameworks,
+.powerbi-features {
+  padding: 5rem 2rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.python-applications h2,
+.web-dev-stack h2,
+.data-science-tools h2,
+.blender-workflow h2,
+.design-principles h2,
+.ux-methodology h2,
+.pm-frameworks h2,
+.powerbi-features h2 {
+  text-align: center;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 3rem;
+}
+
+.applications-grid,
+.stack-grid,
+.tools-grid,
+.workflow-grid,
+.principles-grid,
+.methodology-grid,
+.frameworks-grid,
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.app-card,
+.stack-card,
+.tool-card,
+.workflow-card,
+.principle-card,
+.methodology-card,
+.framework-card,
+.feature-card {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
+}
+
+.app-card:hover,
+.stack-card:hover,
+.tool-card:hover,
+.workflow-card:hover,
+.principle-card:hover,
+.methodology-card:hover,
+.framework-card:hover,
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.app-icon,
+.stack-icon,
+.tool-icon,
+.workflow-icon,
+.principle-icon,
+.methodology-icon,
+.framework-icon,
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.app-card h3,
+.stack-card h3,
+.tool-card h3,
+.workflow-card h3,
+.principle-card h3,
+.methodology-card h3,
+.framework-card h3,
+.feature-card h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
+
+.app-card p,
+.stack-card p,
+.tool-card p,
+.workflow-card p,
+.principle-card p,
+.methodology-card p,
+.framework-card p,
+.feature-card p {
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Learning Paths Section */
+.learning-paths {
+  padding: 5rem 2rem;
+  background: #ffffff;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.learning-paths h2 {
+  text-align: center;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 3rem;
+}
+
+.paths-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.path-card {
+  background: #ffffff;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
+  position: relative;
+  overflow: hidden;
+}
+
+.path-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.path-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.path-card h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+}
+
+.path-card p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.path-duration {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Responsive adjustments for new sections */
+@media (max-width: 768px) {
+  .python-applications,
+  .web-dev-stack,
+  .data-science-tools,
+  .blender-workflow,
+  .design-principles,
+  .ux-methodology,
+  .pm-frameworks,
+  .powerbi-features,
+  .learning-paths {
+    padding: 3rem 1rem;
+  }
+
+  .applications-grid,
+  .stack-grid,
+  .tools-grid,
+  .workflow-grid,
+  .principles-grid,
+  .methodology-grid,
+  .frameworks-grid,
+  .features-grid,
+  .paths-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-card,
+  .stack-card,
+  .tool-card,
+  .workflow-card,
+  .principle-card,
+  .methodology-card,
+  .framework-card,
+  .feature-card,
+  .path-card {
+    padding: 1.5rem;
+  }
+}
+
+/* Animation for new sections */
+.app-card,
+.stack-card,
+.tool-card,
+.workflow-card,
+.principle-card,
+.methodology-card,
+.framework-card,
+.feature-card,
+.path-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Dark mode support for new sections */
+@media (prefers-color-scheme: dark) {
+  .python-applications,
+  .web-dev-stack,
+  .data-science-tools,
+  .blender-workflow,
+  .design-principles,
+  .ux-methodology,
+  .pm-frameworks,
+  .powerbi-features,
+  .learning-paths {
+    background: #1a1a1a;
+  }
+
+  .app-card,
+  .stack-card,
+  .tool-card,
+  .workflow-card,
+  .principle-card,
+  .methodology-card,
+  .framework-card,
+  .feature-card,
+  .path-card {
+    background: #2a2a2a;
+    border-color: #3a3a3a;
+  }
+
+  .app-card h3,
+  .stack-card h3,
+  .tool-card h3,
+  .workflow-card h3,
+  .principle-card h3,
+  .methodology-card h3,
+  .framework-card h3,
+  .feature-card h3,
+  .path-card h3 {
+    color: #ffffff;
+  }
+
+  .app-card p,
+  .stack-card p,
+  .tool-card p,
+  .workflow-card p,
+  .principle-card p,
+  .methodology-card p,
+  .framework-card p,
+  .feature-card p,
+  .path-card p {
+    color: #cccccc;
+  }
+}
+
+/* Enhanced Cart Functionality */
+.cart-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  animation: slideInRight 0.3s ease-out;
+  max-width: 300px;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.cart-notification.success {
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+}
+
+.cart-notification.error {
+  background: linear-gradient(135deg, #f44336 0%, #da190b 100%);
+}
+
+/* Enhanced Button Interactions */
+.enroll-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.enroll-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.enroll-btn:hover::before {
+  left: 100%;
+}
+
+.enroll-btn:active {
+  transform: scale(0.95);
+}
+
+/* Loading States for Buttons */
+.enroll-btn.loading {
+  background: #cccccc;
+  cursor: not-allowed;
+  position: relative;
+}
+
+.enroll-btn.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid transparent;
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Enhanced Course Card Interactions */
+.course-card {
+  position: relative;
+}
+
+.course-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.course-card:hover::after {
+  opacity: 0.05;
+}
+
+/* Improved Navigation Links */
+.nav-link {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::before {
+  width: 100%;
+}
+
+/* Enhanced Hero Section */
+.hero-content h1 {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Improved Stats Display */
+.stat {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.stat:hover::before {
+  left: 100%;
+}
+
+/* Enhanced Form Elements */
+.preview-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.preview-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  transform: translate(-50%, -50%);
+}
+
+.preview-btn:hover::before {
+  width: 100px;
+  height: 100px;
+}
+
+/* Improved Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .enroll-btn::before,
+  .nav-link::before,
+  .stat::before,
+  .preview-btn::before {
+    display: none;
+  }
+  
+  .cart-notification {
+    animation: none;
+  }
+}
+
+/* Print Optimizations */
+@media print {
+  .enroll-btn,
+  .preview-btn,
+  .cart-notification {
+    display: none;
+  }
+  
+  .course-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .enroll-btn,
+  .primary-btn,
+  .secondary-btn {
+    border: 2px solid #000000;
+  }
+  
+  .course-card {
+    border: 2px solid #000000;
+  }
+  
+  .nav-link {
+    border: 1px solid #000000;
+  }
+}
+  
+  
+  
+  
+/* Enhanced scroll to top for course pages */
+.chatgpt-courses-page,
+.python-courses-page,
+.web-development-courses-page,
+.data-science-courses-page,
+.blender-courses-page,
+.graphic-design-courses-page,
+.ux-design-courses-page,
+.project-management-courses-page,
+.powerbi-courses-page {
+  scroll-behavior: smooth;
+}
+
+/* Ensure proper page height and scroll behavior */
+.chatgpt-courses-page,
+.python-courses-page,
+.web-development-courses-page,
+.data-science-courses-page,
+.blender-courses-page,
+.graphic-design-courses-page,
+.ux-design-courses-page,
+.project-management-courses-page,
+.powerbi-courses-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  overflow-x: hidden;
+}
+
+/* Fix for potential scroll issues */
+.hero-content,
+.why-learn,
+.course-categories,
+.python-applications,
+.web-dev-stack,
+.data-science-tools,
+.blender-workflow,
+.design-principles,
+.ux-methodology,
+.pm-frameworks,
+.powerbi-features,
+.learning-paths,
+.featured-courses,
+.success-stories,
+.cta-section,
+.footer-nav {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure proper stacking context */
+.course-card,
+.benefit-card,
+.category-card,
+.app-card,
+.stack-card,
+.tool-card,
+.workflow-card,
+.principle-card,
+.methodology-card,
+.framework-card,
+.feature-card,
+.path-card,
+.story-card {
+  position: relative;
+  z-index: 2;
+}
+
+/* Fix for navigation links */
+.nav-link {
+  position: relative;
+  z-index: 3;
+  cursor: pointer;
+}
+
+/* Enhanced button interactions */
+.enroll-btn,
+.primary-btn,
+.secondary-btn {
+  position: relative;
+  z-index: 3;
+  cursor: pointer;
+}
+
+/* Ensure proper image display */
+.hero-image img,
+.course-image img,
+.story-avatar img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Fix for potential layout shifts */
+.course-card {
+  contain: layout style paint;
+}
+
+.benefit-card,
+.category-card,
+.app-card,
+.stack-card,
+.tool-card,
+.workflow-card,
+.principle-card,
+.methodology-card,
+.framework-card,
+.feature-card,
+.path-card,
+.story-card {
+  contain: layout style paint;
+}
+
+/* Improved responsive behavior */
+@media (max-width: 768px) {
+  .chatgpt-courses-page,
+  .python-courses-page,
+  .web-development-courses-page,
+  .data-science-courses-page,
+  .blender-courses-page,
+  .graphic-design-courses-page,
+  .ux-design-courses-page,
+  .project-management-courses-page,
+  .powerbi-courses-page {
+    overflow-x: hidden;
+  }
+  
+  .hero-content h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+  
+  .hero-content p {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+  }
+}
+
+/* Fix for iOS Safari scroll issues */
+@supports (-webkit-touch-callout: none) {
+  .chatgpt-courses-page,
+  .python-courses-page,
+  .web-development-courses-page,
+  .data-science-courses-page,
+  .blender-courses-page,
+  .graphic-design-courses-page,
+  .ux-design-courses-page,
+  .project-management-courses-page,
+  .powerbi-courses-page {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Ensure proper focus states for accessibility */
+.nav-link:focus,
+.enroll-btn:focus,
+.primary-btn:focus,
+.secondary-btn:focus,
+.preview-btn:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Fix for potential z-index issues */
+.course-overlay {
+  z-index: 4;
+}
+
+.preview-btn {
+  z-index: 5;
+}
+
+/* Enhanced loading states */
+.enroll-btn.loading {
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Fix for potential text rendering issues */
+.hero-content h1,
+.hero-content p,
+.benefit-card h3,
+.benefit-card p,
+.category-card h3,
+.category-card p,
+.app-card h3,
+.app-card p,
+.stack-card h3,
+.stack-card p,
+.tool-card h3,
+.tool-card p,
+.workflow-card h3,
+.workflow-card p,
+.principle-card h3,
+.principle-card p,
+.methodology-card h3,
+.methodology-card p,
+.framework-card h3,
+.framework-card p,
+.feature-card h3,
+.feature-card p,
+.path-card h3,
+.path-card p,
+.course-title,
+.course-description,
+.story-content h4,
+.story-content p,
+.story-content span {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scroll to Top Button */
+.scroll-to-top-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+}
+
+.scroll-to-top-btn.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.scroll-to-top-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+}
+
+.scroll-to-top-btn:active {
+  transform: translateY(0);
+}
+
+/* Scroll to Top Button Animation */
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(20px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05) translateY(0);
+  }
+  70% {
+    transform: scale(0.9) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.scroll-to-top-btn.visible {
+  animation: bounceIn 0.6s ease-out;
+}
+
+/* Enhanced scroll behavior for course pages */
+.course-page-container {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+/* Fix for potential scroll container issues */
+.course-page-container > * {
+  scroll-behavior: smooth;
+}
+
+/* Ensure proper scroll restoration */
+.course-page-container {
+  scroll-behavior: auto;
+}
+
+/* Force immediate scroll for navigation */
+.nav-link[onclick*="forceScrollToTop"],
+.nav-link[onclick*="handleLinkClick"] {
+  scroll-behavior: auto;
+}
+
+/* Additional scroll fixes */
+html, body {
+  scroll-behavior: smooth;
+}
+
+/* Fix for React Router navigation */
+[data-router-view] {
+  scroll-behavior: smooth;
+}
+
+/* Ensure proper scroll position on route change */
+.route-container {
+  scroll-behavior: auto;
+  scroll-behavior: smooth;
+}
   
   
   

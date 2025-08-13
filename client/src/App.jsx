@@ -10,7 +10,18 @@ import Login from "./Pages/login";
 import Footer from "./components/Footer";
 import Form from "./Pages/Form";
 import Create from "./Pages/Create";
-import Dashboard from "./Pages/Dashboard";   
+import Dashboard from "./Pages/Dashboard";
+import DashboardIntended from "./Pages/DashboardIntended";
+import DashboardStructure from "./Pages/DashboardStructure";
+import DashboardSetup from "./Pages/DashboardSetup";
+import DashboardFilm from "./Pages/DashboardFilm";
+import DashboardCurriculum from "./Pages/DashboardCurriculum";
+import DashboardCaptions from "./Pages/DashboardCaptions";
+import DashboardAccessibility from "./Pages/DashboardAccessibility";
+import DashboardLanding from "./Pages/DashboardLanding";
+import DashboardPricing from "./Pages/DashboardPricing";
+import DashboardPromotions from "./Pages/DashboardPromotions";
+import DashboardMessages from "./Pages/DashboardMessages";   
 import SubPages from "./Pages/subPages";
 import IBMPages from "./Pages/IBMPages";
 import "./App.css";
@@ -29,6 +40,15 @@ import ResetPassword from "./Pages/ResetPassword";
 import OtpVerification from "./Pages/OtpVerification";
 import SetNewPassword from "./Pages/SetNewPassword";
 import CourseDetails from "./Pages/CourseDetails";
+import ChatGPTCourses from "./Pages/ChatGPTCourses";
+import PythonCourses from "./Pages/PythonCourses";
+import WebDevelopmentCourses from "./Pages/WebDevelopmentCourses";
+import DataScienceCourses from "./Pages/DataScienceCourses";
+import BlenderCourses from "./Pages/BlenderCourses";
+import GraphicDesignCourses from "./Pages/GraphicDesignCourses";
+import UXDesignCourses from "./Pages/UXDesignCourses";
+import ProjectManagementCourses from "./Pages/ProjectManagementCourses";
+import PowerBICourses from "./Pages/PowerBICourses";
 
 // Cart context setup
 export const CartContext = createContext();
@@ -115,7 +135,18 @@ function App() {
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/form" element={<Form />} />
               <Route path="/create" element={<Create />} />
-              <Route path="/dashboard" element={<Dashboard />} /> {/* ✅ ADD THIS ROUTE */}
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard/intended" element={<DashboardIntended />} />
+              <Route path="/dashboard/structure" element={<DashboardStructure />} />
+              <Route path="/dashboard/setup" element={<DashboardSetup />} />
+              <Route path="/dashboard/film" element={<DashboardFilm />} />
+              <Route path="/dashboard/curriculum" element={<DashboardCurriculum />} />
+              <Route path="/dashboard/captions" element={<DashboardCaptions />} />
+              <Route path="/dashboard/accessibility" element={<DashboardAccessibility />} />
+              <Route path="/dashboard/landing" element={<DashboardLanding />} />
+              <Route path="/dashboard/pricing" element={<DashboardPricing />} />
+              <Route path="/dashboard/promotions" element={<DashboardPromotions />} />
+              <Route path="/dashboard/messages" element={<DashboardMessages />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/pending-course/:id" element={<PendingCourseDetails />} />
               <Route path="/admin/instructors" element={<AdminInstructors />} />
@@ -132,6 +163,16 @@ function App() {
               <Route path="/verify-otp" element={<OtpVerification />} />
               <Route path="/set-new-password" element={<SetNewPassword />} />
               <Route path="/course/:id" element={<CourseDetails />} />
+              {/* Course category routes */}
+              <Route path="/chatgpt-courses" element={<ChatGPTCourses />} />
+              <Route path="/python-courses" element={<PythonCourses />} />
+              <Route path="/web-development-courses" element={<WebDevelopmentCourses />} />
+              <Route path="/data-science-courses" element={<DataScienceCourses />} />
+              <Route path="/blender-courses" element={<BlenderCourses />} />
+              <Route path="/graphic-design-courses" element={<GraphicDesignCourses />} />
+              <Route path="/ux-design-courses" element={<UXDesignCourses />} />
+              <Route path="/project-management-courses" element={<ProjectManagementCourses />} />
+              <Route path="/powerbi-courses" element={<PowerBICourses />} />
               {/* Profile and dropdown menu routes */}
               <Route path="/my-learning" element={<MyLearning />} />
               <Route path="/wishlist" element={<Wishlist />} />
